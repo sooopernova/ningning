@@ -11,6 +11,7 @@
     --green:#3fb87f;--green-bg:#0e2a1f;--amber:#e0a13c;--amber-bg:#2c2110;
     --red:#e0594d;--red-bg:#2c1513;--blue:#4d9be0;--blue-bg:#0e2230;
     --purple:#9b7cd4;--gold:#f0c14b;
+    --cat-hook:#4d9be0;--cat-cta:#e0954d;--cat-target:#3fb87f;--cat-flow:#9b7cd4;--cat-part:#e0a13c;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--ink);font-family:'Pretendard','Noto Sans KR',-apple-system,sans-serif;font-size:13px;line-height:1.5;padding:0 0 60px;}
@@ -23,11 +24,15 @@
   .sub{color:var(--ink3);font-size:11.5px;}
   .meta-pill{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--ink2);}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
-  .brandtabs{display:flex;gap:4px;margin-top:14px;}
-  .btab{padding:5px 14px;border-radius:7px;font-size:12px;color:var(--ink2);cursor:pointer;border:1px solid transparent;}
-  .btab.on{background:var(--panel2);color:var(--ink);border-color:var(--line);}
-  h2{font-size:14px;font-weight:700;margin:26px 0 12px;display:flex;align-items:center;gap:9px;letter-spacing:-.2px;}
+  .brandtabs{display:flex;gap:4px;margin-top:14px;align-items:center;}
+  .btab{padding:5px 14px;border-radius:7px;font-size:12px;color:var(--ink2);border:1px solid transparent;background:var(--panel2);}
+  h2{font-size:14px;font-weight:700;margin:26px 0 12px;display:flex;align-items:center;gap:9px;letter-spacing:-.2px;flex-wrap:wrap;}
   h2 .count{font-size:11px;color:var(--ink3);font-weight:500;background:var(--panel2);padding:1px 8px;border-radius:10px;}
+  .asof{font-size:10px;color:var(--blue);font-weight:600;background:var(--blue-bg);padding:1px 8px;border-radius:10px;border:1px solid #1a3a52;}
+  .kpibar{display:flex;gap:22px;padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;}
+  .kpi{display:flex;flex-direction:column;}
+  .kpi .kv{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .kpi .kk{font-size:10px;color:var(--ink3);}
   .signals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
   .scard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px;position:relative;overflow:hidden;}
   .scard .stip{position:absolute;top:0;left:0;width:3px;height:100%;}
@@ -35,92 +40,122 @@
   .scard.amber .stip{background:var(--amber);}.scard.red .stip{background:var(--red);}
   .scard h3{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:3px;}
   .scard .desc{font-size:10.5px;color:var(--ink3);margin-bottom:11px;line-height:1.4;}
-  .srow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line);font-size:12px;}
+  .srow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line);font-size:12px;cursor:pointer;margin:0 -6px;padding-left:6px;padding-right:6px;border-radius:5px;}
+  .srow:hover{background:rgba(255,255,255,.04);}
   .srow:first-of-type{border-top:none;}
   .sname{font-weight:600;display:flex;align-items:center;gap:6px;}
   .sname .gen{font-size:9.5px;color:var(--ink3);font-weight:400;}
   .sval{font-variant-numeric:tabular-nums;font-weight:700;}
   .sval.up{color:var(--green);}.sval.dn{color:var(--red);}.sval.mid{color:var(--amber);}
   .empty{color:var(--ink3);font-size:11px;padding:8px 0;font-style:italic;}
+  .test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+  .test-card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px;cursor:pointer;transition:border-color .12s;}
+  .test-card:hover{border-color:var(--ink3);}
+  .test-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .test-name{font-size:13px;font-weight:700;}
+  .test-name .p{font-size:9.5px;color:var(--ink3);font-weight:400;margin-left:4px;}
+  .vbadge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;}
+  .v-test{background:var(--panel2);color:var(--ink2);}
+  .v-beri{background:var(--amber-bg);color:var(--amber);}
+  .v-pot{background:var(--blue-bg);color:var(--blue);}
+  .v-rej{background:var(--red-bg);color:var(--red);}
+  .test-metrics{display:flex;gap:14px;font-size:10.5px;}
+  .test-metrics .tm{display:flex;flex-direction:column;}
+  .test-metrics .tk{color:var(--ink3);font-size:9px;}
+  .test-metrics .tv{font-weight:700;font-variant-numeric:tabular-nums;}
+  .catchips{display:flex;gap:4px;margin-top:9px;flex-wrap:wrap;}
+  .catchip{font-size:9px;padding:1px 8px;border-radius:9px;font-weight:600;}
+  .cat-후킹{background:rgba(77,155,224,.15);color:var(--cat-hook);}
+  .cat-CTA{background:rgba(224,149,77,.15);color:var(--cat-cta);}
+  .cat-타겟{background:rgba(63,184,127,.15);color:var(--cat-target);}
+  .cat-플로우{background:rgba(155,124,212,.15);color:var(--cat-flow);}
+  .cat-특정부분{background:rgba(224,161,60,.15);color:var(--cat-part);}
   .leaders{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
   .lbcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;}
   .lbhead{display:flex;align-items:center;gap:9px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line);}
   .lbicon{font-size:18px;}.lbtitle{font-size:12.5px;font-weight:700;}.lbdesc{font-size:9.5px;color:var(--ink3);}
   .lblist{display:flex;flex-direction:column;gap:9px;}
-  .lbrow{display:flex;align-items:center;gap:8px;}
+  .lbrow{display:flex;align-items:center;gap:8px;cursor:pointer;}
   .lbrank{font-size:10px;color:var(--ink3);font-weight:700;width:12px;}
   .lbrow:first-child .lbrank{color:var(--gold);}
-  .lbname{font-size:11px;font-weight:600;color:var(--ink2);min-width:56px;display:flex;flex-direction:column;}
-  .lbgen{font-size:8px;color:var(--ink3);font-weight:400;}
+  .lbname{font-size:11px;font-weight:600;color:var(--ink2);min-width:56px;}
   .lbbar{flex:1;height:5px;background:var(--panel2);border-radius:3px;overflow:hidden;}
   .lbfill{height:100%;border-radius:3px;}
-  .lbval{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;min-width:46px;text-align:right;}
+  .lbval{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;min-width:48px;text-align:right;}
   .lineage{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
   .lrow{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--line);}
   .lrow:hover{background:var(--panel2);}
   .lrow.root{font-weight:700;}
   .ltoggle{width:16px;color:var(--ink3);font-size:10px;transition:transform .15s;}
   .lrow.open .ltoggle{transform:rotate(90deg);}
-  .lname{min-width:150px;display:flex;align-items:center;gap:7px;}
+  .lname{min-width:130px;display:flex;align-items:center;gap:7px;}
   .crown{color:var(--gold);font-size:12px;}
   .lgen{font-size:9.5px;color:var(--ink3);font-family:monospace;}
   .lmetrics{display:flex;gap:14px;margin-left:auto;font-size:11.5px;}
   .lm{font-variant-numeric:tabular-nums;text-align:right;min-width:46px;}
   .lm .lk{display:block;font-size:9px;color:var(--ink3);}
   .lm .lv{font-weight:700;}
-  .judge{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600;min-width:74px;text-align:center;}
-  .j-keep{background:var(--green-bg);color:var(--green);}
+  .judge{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600;min-width:70px;text-align:center;}
   .j-beri{background:var(--amber-bg);color:var(--amber);}
-  .j-stop{background:var(--red-bg);color:var(--red);}
-  .j-wait{background:var(--panel2);color:var(--ink3);}
+  .j-pot{background:var(--blue-bg);color:var(--blue);}
+  .j-rej{background:var(--red-bg);color:var(--red);}
+  .j-test{background:var(--panel2);color:var(--ink3);}
   .children{display:none;background:#11171f;}
   .children.show{display:block;}
-  .child{display:flex;align-items:center;gap:12px;padding:11px 16px 11px 40px;border-bottom:1px solid var(--line);border-left:2px solid var(--purple);margin-left:22px;}
-  .cleft{min-width:230px;}
-  .changept{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
-  .ctag{font-size:9px;padding:1px 7px;border-radius:9px;background:#241a2c;color:var(--purple);}
-  .pointbox{font-size:11px;color:var(--ink);background:#1a1420;padding:8px 13px;margin:0 16px 0 62px;border-left:2px solid var(--purple);line-height:1.5;}
+  .child{padding:14px 16px 14px 40px;border-bottom:1px solid var(--line);border-left:2px solid var(--purple);margin-left:22px;cursor:pointer;}
+  .child:hover{background:#141b24;}
+  .child-top{display:flex;align-items:center;gap:12px;}
+  .varibar{display:flex;gap:6px;margin-top:11px;margin-bottom:4px;}
+  .vari-ax{flex:1;text-align:center;}
+  .vari-ax .vlabel{font-size:9px;color:var(--ink3);margin-bottom:4px;}
+  .vari-ax .vdot{height:6px;border-radius:3px;background:var(--panel2);}
+  .vari-ax.on .vdot{background:var(--c);}
+  .vari-ax.on .vlabel{color:var(--c);font-weight:700;}
+  .pointbox{font-size:11px;color:var(--ink);background:#1a1420;padding:8px 13px;margin-top:10px;border-left:2px solid var(--purple);line-height:1.5;border-radius:0 6px 6px 0;}
   .pointbox .plabel{color:var(--purple);font-weight:700;font-size:10px;margin-right:7px;}
-  .insight{font-size:11px;color:var(--ink2);background:var(--panel2);padding:9px 13px;margin:0 16px 12px 62px;border-left:2px solid var(--gold);line-height:1.6;border-radius:0 0 7px 7px;}
-  .insight b{color:var(--gold);font-weight:700;margin-right:7px;font-size:10px;}
   table{width:100%;border-collapse:collapse;font-size:11.5px;}
-  thead th{text-align:left;padding:9px 11px;color:var(--ink3);font-weight:600;font-size:10.5px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.4px;cursor:pointer;user-select:none;}
+  thead th{text-align:left;padding:9px 11px;color:var(--ink3);font-weight:600;font-size:10.5px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.4px;cursor:pointer;}
   thead th:hover{color:var(--ink);}
   tbody td{padding:9px 11px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
+  tbody tr{cursor:pointer;}
   tbody tr:hover{background:var(--panel);}
   .tbl-wrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .filters{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-  .fbtn{padding:4px 11px;border-radius:7px;font-size:11px;background:var(--panel);border:1px solid var(--line);color:var(--ink2);cursor:pointer;}
-  .fbtn.on{background:var(--panel2);color:var(--ink);border-color:var(--ink3);}
-  .gentag{font-size:9px;color:var(--ink3);font-family:monospace;}
-  .badge{display:inline-block;font-size:9.5px;padding:2px 7px;border-radius:5px;font-weight:600;}
-  .badge.beri{background:#241a2c;color:var(--purple);}
-  .badge.new{background:var(--blue-bg);color:var(--blue);}
   .note{font-size:10px;color:var(--ink3);margin-top:6px;font-style:italic;}
-  /* STAGE1: 약점 뱃지 */
-  .weak{display:inline-block;font-size:9px;padding:1px 6px;border-radius:5px;background:#3a2418;color:#e0954d;font-weight:600;margin-left:4px;}
-  /* 타겟 불일치 카드 */
-  .mismatch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .mmcard{background:var(--panel);border:1px solid #3a3018;border-radius:12px;padding:14px 16px;}
-  .mmcard .mmname{font-size:13px;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
-  .mmflow{display:flex;align-items:center;gap:8px;font-size:11px;margin:5px 0;}
-  .mmbox{padding:4px 9px;border-radius:6px;font-weight:600;}
-  .mmconv{background:var(--green-bg);color:var(--green);}
-  .mmcpm{background:var(--blue-bg);color:var(--blue);}
-  .mmarrow{color:var(--ink3);}
-  .mmrec{font-size:10.5px;color:var(--amber);background:var(--amber-bg);padding:7px 10px;border-radius:7px;margin-top:9px;line-height:1.45;}
-  /* 가설 판정 뱃지 */
-  .verdict{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;padding:2px 8px;border-radius:5px;font-weight:700;margin-left:8px;}
-  .v-accept{background:var(--green-bg);color:var(--green);}
-  .v-reject{background:var(--red-bg);color:var(--red);}
-  .v-partial{background:var(--amber-bg);color:var(--amber);}
-  .lesson{font-size:10.5px;color:var(--ink2);background:#1a1512;padding:7px 12px;margin:0 16px 12px 62px;border-left:2px solid var(--amber);line-height:1.5;}
-  .lesson b{color:var(--amber);font-weight:700;margin-right:6px;font-size:10px;}
-  .kpibar{display:flex;gap:22px;padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;}
-  .kpi{display:flex;flex-direction:column;}
-  .kpi .kv{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;}
-  .kpi .kk{font-size:10px;color:var(--ink3);}
-  @media(max-width:980px){.signals,.leaders{grid-template-columns:repeat(2,1fr);}}
+  .hm-wrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;}
+  .hm-block{margin-bottom:20px;}.hm-block:last-child{margin-bottom:0;}
+  .hm-title{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:10px;}
+  .hm-title .axis{font-size:10px;color:var(--ink3);font-weight:400;margin-left:6px;}
+  .hm-grid{display:grid;gap:8px;}
+  .hm-age{grid-template-columns:repeat(6,1fr);}
+  .hm-gender{grid-template-columns:repeat(2,1fr);max-width:420px;}
+  .hm-cell{border-radius:10px;padding:12px 13px;position:relative;border:1px solid var(--line);min-height:92px;display:flex;flex-direction:column;justify-content:space-between;}
+  .hm-seg{font-size:12px;font-weight:700;color:#fff;}
+  .hm-roas{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;margin:5px 0;color:#fff;}
+  .hm-sub{font-size:9.5px;line-height:1.5;color:rgba(255,255,255,.9);}
+  .hm-flag{position:absolute;top:8px;right:8px;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:5px;}
+  .flag-under{background:#0e2a1f;color:#5fe0a0;border:1px solid #1d6e4a;}
+  .flag-over{background:#2c1513;color:#ffab9e;border:1px solid #7a3028;}
+  .hm-insight{background:var(--panel2);border-left:2px solid var(--gold);padding:10px 14px;border-radius:7px;margin-top:14px;font-size:11px;line-height:1.6;color:var(--ink2);}
+  .hm-insight b{color:var(--gold);}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-bg.on{display:flex;}
+  .modal-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;max-width:640px;width:100%;position:relative;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  .modal-x{position:absolute;top:16px;right:18px;color:var(--ink3);cursor:pointer;font-size:15px;}
+  .modal-x:hover{color:var(--ink);}
+  .m-head{font-size:17px;font-weight:800;margin-bottom:4px;}
+  .m-head .m-sub{font-size:11px;color:var(--ink3);font-weight:400;font-family:monospace;margin-left:6px;}
+  .m-asof{font-size:10px;color:var(--blue);margin-bottom:14px;}
+  .m-chart{background:var(--panel2);border-radius:10px;padding:20px 16px 8px;margin-bottom:16px;}
+  .m-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+  .m-stats>div{background:var(--panel2);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;}
+  .m-stats .mk{font-size:9.5px;color:var(--ink3);}
+  .m-stats .mv{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .m-insight{background:var(--panel2);border-left:2px solid var(--gold);padding:11px 14px;border-radius:0 8px 8px 0;font-size:11.5px;line-height:1.65;color:var(--ink2);margin-top:10px;}
+  .m-insight b{color:var(--gold);margin-right:6px;}
+  .m-lineage{background:#11171f;border-radius:9px;padding:12px 14px;margin:12px 0;}
+  .m-lin-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:11.5px;flex-wrap:wrap;}
+  .m-lin-arrow{color:var(--purple);}
+  @media(max-width:980px){.signals,.leaders,.hm-age{grid-template-columns:repeat(2,1fr);}.m-stats{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
@@ -129,266 +164,248 @@
     <div class="htop">
       <div class="brand"><span class="logo"><span class="star">✦</span> 닝닝</span>
         <span class="sub">오리엔 소재 진단 대시보드</span></div>
-      <div class="meta-pill"><span class="dot"></span> 시트 연동 · 실제 데이터</div>
+      <div class="meta-pill"><span class="dot"></span> 메타 API 실측</div>
     </div>
-    <div class="brandtabs"><div class="btab on">오리엔 · BEP 140% / 목표 180%</div></div>
+    <div class="brandtabs"><div class="btab">오리엔 · 기준 ROAS 160% / 목표 180%</div></div>
   </div>
 </header>
 <div class="wrap">
 
+  <h2>📊 계정 KPI <span class="asof">📅 어제(7/1) 하루</span></h2>
   <div class="kpibar" id="kpibar"></div>
 
-  <h2>🔔 오늘의 특이값</h2>
+  <h2>🔔 오늘의 특이값 <span class="asof">📅 어제(7/1) 기준</span></h2>
   <div class="signals" id="signals"></div>
-  <div class="note">시트 판정·ROAS 기준 · 일별 4일치 데이터 연동 시 Sustain/Rising 자동 정밀화</div>
+  <div class="note">클릭 시 상세 · 고효율=7일 ROAS 추이 / 떠오름=게시·누적 / 배리후보=계보·방향 / 중단=24h내 꺼짐·사유</div>
 
-  <h2>🎯 타겟 불일치 <span class="count">전환 타겟 ≠ 노출 쏠림 타겟 · 신규 세트 기회</span></h2>
-  <div class="mismatch-grid" id="mismatch"></div>
-  <div class="note">전환은 A타겟에서 나는데 노출(CPM 최저)은 B타겟에 쏠린 소재 · A 전용 광고세트 개설 시 효율 상승 여지</div>
+  <h2>🧪 테스트 중인 소재 <span class="asof">📅 전체기간 누적</span> <span class="count">4.5만 미만 학습 중 + 살아있는 배리</span></h2>
+  <div class="test-grid" id="testing"></div>
+  <div class="note">판정: 누적 &lt;4.5만=테스트중 / ≥4.5만 &amp; ROAS&lt;160%=기각 / ≥4.5만 &amp; ROAS≥160% &amp; 전환≥5=배리가능 / 전환&lt;5=잠재력 · 클릭 시 계보+최근4일</div>
 
-  <h2>⚖️ 가설 검증 <span class="count">배리 결과로 가설 기각/수용 자동 판정</span></h2>
-  <div class="lineage" id="verdicts"></div>
-  <div class="note">배리포인트(가설) → 원본 대비 ROAS 변화 → 수용/기각 · 기각된 건 "하지 말 것" 레슨런으로 축적</div>
-
-  <h2>🏅 지표별 강자 <span class="count">구간별 TOP 5 · 배리 조합 전략용</span></h2>
+  <h2>🏅 지표별 강자 <span class="asof">📅 전체기간 누적</span> <span class="count">TOP 5</span></h2>
   <div class="leaders" id="leaders"></div>
-  <div class="note">후크율·CTR·ROAS·ThruPlay별 최강 소재. "후킹은 A, 전환은 B" 조합의 근거</div>
+  <div class="note">ThruPlay는 절대수 아닌 <b>지속률(ThruPlay ÷ 노출 %)</b></div>
 
-  <h2>🌳 배리·디벨롭 계보 <span class="count" id="lincount"></span></h2>
+  <h2>🌳 배리·디벨롭 계보 <span class="asof">📅 전체기간 누적</span> <span class="count" id="lincount"></span></h2>
   <div class="lineage" id="lineage"></div>
-  <div class="note">👑 = 계보 내 현재 ROAS 1위 · 원본 클릭 → 배리 펼침 (배리포인트·수치·판정)</div>
+  <div class="note">👑 계보 챔피언 · 펼치면 <b>배리 5축(후킹/CTA/타겟/플로우/특정부분)</b> 시각화 · 소재 클릭 시 계보+최근4일</div>
 
-  <h2>📋 전체 소재 <span class="count" id="rowcount"></span></h2>
-  <div class="filters">
-    <span class="fbtn on" data-f="all">전체</span>
-    <span class="fbtn" data-f="신규">신규</span>
-    <span class="fbtn" data-f="베리">베리</span>
-    <span class="fbtn" data-f="keep">✅유지</span>
-    <span class="fbtn" data-f="beri">🟡배리가능</span>
-    <span class="fbtn" data-f="stop">🔴중단</span>
-    <span class="fbtn" data-f="wait">⏳대기</span>
-  </div>
+  <h2>📋 전체 소재 <span class="asof">📅 전체기간 누적</span> <span class="count" id="rowcount"></span></h2>
   <div class="tbl-wrap"><table id="tbl">
     <thead><tr>
-      <th data-s="name">소재</th><th data-s="date">제작일</th><th data-s="gubun">구분</th><th data-s="parent">원본</th>
-      <th data-s="roas">ROAS</th><th data-s="hook">후크율</th><th data-s="ctr">CTR</th><th data-s="thruplay">ThruPlay</th>
-      <th data-s="buy">구매</th><th data-s="spend">지출</th><th data-s="judge">판정</th>
+      <th data-s="sojae">소재</th><th data-s="parent">원본</th>
+      <th data-s="roas">ROAS</th><th data-s="ctr">CTR</th><th data-s="thruRate">지속률</th>
+      <th data-s="buy">구매</th><th data-s="spend">누적지출</th><th data-s="verdict">판정</th><th data-s="active">상태</th>
     </tr></thead><tbody id="tbody"></tbody>
   </table></div>
-  <div class="note">실제 시트 데이터 (제작일자·소재명·성과·판정 그대로) · 성과 미조회 소재는 하단</div>
+
+  <h2>🌡️ 타겟 히트맵 <span class="asof">📅 최근 7일(6/27~7/3)</span> <span class="count">연령×성별 · 계정 전체</span></h2>
+  <div id="heatmap"></div>
+  <div class="note">색 진할수록 ROAS 높음 · ⚠️ 연령·성별 교차는 API 계정레벨 제약상 각 축 단독 집계</div>
 
 </div>
 <script>
-const BEP=140, TARGET=180;
-const data=[
-  {name:"화투",id:"_CO_260519_V_",date:"260519",gubun:"베리",parent:"화장",spend:null,buy:null,roas:null,ctr:null,hook:null,thruplay:null,judge:"대기",point:"자막 디자인·영상 표현 디벨롭",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"세안",id:"_CO_260527_V_",date:"260527",gubun:"신규",parent:null,spend:98894,buy:2,roas:46,ctr:2.84,hook:7.9,thruplay:115,judge:"중단",point:null,weakness:null,convTarget:"여_18-24",cpmTarget:"여_18-24",mismatch:false,verdict:null},
-  {name:"노답",id:"_CO_260527_V_",date:"260527",gubun:"신규",parent:null,spend:70688,buy:2,roas:96,ctr:1.2,hook:9.71,thruplay:180,judge:"중단",point:null,weakness:null,convTarget:"여_18-24",cpmTarget:"남_18-24",mismatch:true,verdict:null},
-  {name:"제로",id:"_CO_260528_V_",date:"260528",gubun:"신규",parent:null,spend:77721,buy:1,roas:42,ctr:1.03,hook:5.66,thruplay:231,judge:"중단",point:null,weakness:null,convTarget:"남_18-24",cpmTarget:"남_18-24",mismatch:false,verdict:null},
-  {name:"아침",id:"_CO_260602_V_",date:"260602",gubun:"신규",parent:null,spend:null,buy:null,roas:null,ctr:null,hook:null,thruplay:null,judge:"대기",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"아투",id:"_CO_260604_V_",date:"260604",gubun:"베리",parent:"아침",spend:178769,buy:5,roas:95,ctr:1.26,hook:9.83,thruplay:602,judge:"배리가능",point:"아침의 중복정보 제거 + 제품을 더 일찍 노출",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"아삼",id:"_CO_260608_V_",date:"260608",gubun:"베리",parent:"아투",spend:60328,buy:0,roas:0,ctr:1.3,hook:6.53,thruplay:87,judge:"중단",point:"피부여신 되는 법 후킹 교체",weakness:null,convTarget:null,cpmTarget:"남_18-24",mismatch:false,verdict:{type:"reject",detail:"ROAS 0 — 원본 95%에서 붕괴"}},
-  {name:"요철",id:"_CO_260609_V_",date:"260609",gubun:"신규",parent:null,spend:145843,buy:4,roas:83,ctr:3.49,hook:7.69,thruplay:169,judge:"배리가능",point:null,weakness:null,convTarget:"여_25-34",cpmTarget:"여_18-24",mismatch:true,verdict:null},
-  {name:"기생",id:"_CO_260609_V_",date:"260609",gubun:"신규",parent:null,spend:57186,buy:0,roas:0,ctr:2.9,hook:13.14,thruplay:110,judge:"중단",point:"모낭충 신규 USP 발굴",weakness:null,convTarget:null,cpmTarget:"여_18-24",mismatch:false,verdict:null},
-  {name:"기투",id:"_CO_260610_V_",date:"260610",gubun:"베리",parent:"기생",spend:94694,buy:2,roas:55,ctr:1.53,hook:10.86,thruplay:467,judge:"중단",point:"모낭충 USP 추가버전",weakness:"ROAS",convTarget:"여_18-24",cpmTarget:"남_18-24",mismatch:true,verdict:null},
-  {name:"문투",id:"_CO_260611_V_",date:"260611",gubun:"베리",parent:"문질문질",spend:934018,buy:46,roas:139,ctr:0.86,hook:11.48,thruplay:10885,judge:"배리가능",point:"문질문질 후킹 삭제 디벨롭",weakness:"CTR",convTarget:"남_18-24",cpmTarget:"남_18-24",mismatch:false,verdict:null},
-  {name:"세투",id:"_CO_260615_V_",date:"260615",gubun:"베리",parent:"세안습관",spend:310967,buy:13,roas:129,ctr:1.17,hook:6.32,thruplay:1230,judge:"배리가능",point:"세안습관 후킹 삭제 디벨롭",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"문삼",id:"_CO_260615_V_",date:"260615",gubun:"베리",parent:"문투",spend:83087,buy:0,roas:0,ctr:0.68,hook:12.53,thruplay:1207,judge:"중단",point:"CTR 낮음 피드백→CTR 높은 소재로 교체",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:{type:"reject",detail:"ROAS 0 — 원본 139%에서 붕괴"}},
-  {name:"기삼",id:"_CO_260615_V_",date:"260615",gubun:"베리",parent:"기투",spend:205284,buy:8,roas:106,ctr:1.34,hook:11.78,thruplay:1587,judge:"배리가능",point:"모낭충 시작 노출+제품 늦게 노출(이탈↓)",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:{type:"accept",detail:"원본 55%→106% (+51%p)"}},
-  {name:"두껍",id:"_CO_260616_V_",date:"260616",gubun:"베리",parent:"두꺼비턱",spend:214761,buy:8,roas:112,ctr:1.1,hook:4.53,thruplay:424,judge:"배리가능",point:"남성 소스로 교체",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"문사",id:"_CO_260616_V_",date:"260616",gubun:"베리",parent:"문삼",spend:218335,buy:9,roas:123,ctr:1.32,hook:7.15,thruplay:857,judge:"배리가능",point:null,weakness:"후크율",convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"짝남",id:"_CO_260617_V_",date:"260617",gubun:"신규",parent:null,spend:139944,buy:5,roas:93,ctr:1.2,hook:10.62,thruplay:589,judge:"배리가능",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"기사",id:"_CO_260617_V_",date:"260617",gubun:"베리",parent:"기삼",spend:104167,buy:1,roas:22,ctr:1.12,hook:10.62,thruplay:856,judge:"중단",point:"남성 소스 교체+이탈 많은 전문가 대본 삭제",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:{type:"reject",detail:"원본 106%→22% (-84%p)"}},
-  {name:"페투",id:"_CO_260619_V_",date:"260619",gubun:"베리",parent:"페네트레7번",spend:60887,buy:2,roas:110,ctr:1.64,hook:3.85,thruplay:80,judge:"중단",point:"중복 혜택 정리+여름 소구 삽입",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"트코",id:"_CO_260622_V_",date:"260622",gubun:"신규",parent:null,spend:67390,buy:2,roas:71,ctr:1.49,hook:3.74,thruplay:64,judge:"중단",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"아니",id:"_CO_260622_V_",date:"260622",gubun:"신규",parent:null,spend:471519,buy:20,roas:126,ctr:1.47,hook:7.16,thruplay:1785,judge:"배리가능",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"신부",id:"_CO_260623_V_",date:"260623",gubun:"신규",parent:null,spend:394329,buy:17,roas:132,ctr:4.81,hook:12.81,thruplay:836,judge:"배리가능",point:"메컵 pain point+청담 신부화장 스토리텔링",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"신투",id:"_CO_260623_V_",date:"260623",gubun:"베리",parent:"신부",spend:81631,buy:3,roas:125,ctr:2.78,hook:5.81,thruplay:78,judge:"중단",point:"기능 중심 빠른 템포+본론",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:{type:"partial",detail:"원본 132%→125% (-7%p)"}},
-  {name:"대박",id:"_CO_260624_V_",date:"260624",gubun:"신규",parent:null,spend:101266,buy:1,roas:25,ctr:1.59,hook:12.44,thruplay:423,judge:"중단",point:null,weakness:"ROAS",convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"올영",id:"_CO_260624_V_",date:"260624",gubun:"신규",parent:null,spend:172047,buy:8,roas:127,ctr:2.28,hook:11.74,thruplay:630,judge:"배리가능",point:"유튜브 컨텐츠형 클렌징오일 본질 소개",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"유튭",id:"_CO_260625_V_",date:"260625",gubun:"신규",parent:null,spend:591385,buy:19,roas:98,ctr:2.29,hook:11.72,thruplay:2076,judge:"배리가능",point:"인스타→유튜브 컨셉 변경, 상세페이지 매칭",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"소개",id:"_CO_260626_V_",date:"260626",gubun:"신규",parent:null,spend:111459,buy:3,roas:86,ctr:1.37,hook:8.76,thruplay:519,judge:"대기",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"요투",id:"_CO_260626_V_",date:"260626",gubun:"베리",parent:"요철",spend:116862,buy:5,roas:131,ctr:2.64,hook:12.43,thruplay:486,judge:"대기",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:{type:"accept",detail:"원본 83%→131% (+48%p)"}},
-  {name:"아니아니",id:"_CO_260626_V_",date:"260626",gubun:"베리",parent:"아니",spend:73518,buy:2,roas:65,ctr:1.74,hook:8.9,thruplay:356,judge:"대기",point:"후킹 배리",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:{type:"reject",detail:"원본 126%→65% (-61%p)"}},
-  {name:"셀라딕스2",id:"_CO_260627_V_",date:"260627",gubun:"신규",parent:null,spend:165529,buy:6,roas:108,ctr:1.15,hook:10.48,thruplay:880,judge:"대기",point:null,weakness:"CTR",convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"여드름",id:"_CO_260627_V_",date:"260627",gubun:"신규",parent:null,spend:89073,buy:3,roas:104,ctr:1.73,hook:17.09,thruplay:393,judge:"대기",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"2주기적2",id:"_CO_260630_V_",date:"260630",gubun:"베리",parent:"2주기적",spend:27137,buy:1,roas:125,ctr:1.15,hook:7.65,thruplay:106,judge:"대기",point:"남성타겟(소스·TTS·워딩)",weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"이상",id:"_CO_260701_V_",date:"260701",gubun:"신규",parent:null,spend:7130,buy:0,roas:0,ctr:1.06,hook:3.03,thruplay:11,judge:"대기",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-  {name:"남친",id:"_CO_260701_V_",date:"260701",gubun:"신규",parent:null,spend:12963,buy:1,roas:254,ctr:1.11,hook:5.42,thruplay:28,judge:"대기",point:null,weakness:null,convTarget:null,cpmTarget:null,mismatch:false,verdict:null},
-];
+const V5={"sojae": [{"sojae": "두꺼비턱", "spend": 23182323, "buy": 1337, "roas": 174, "ctr": 2.76, "imp": 1002822, "thruRate": 15.1, "active": true, "nAds": 7, "parent": null, "cat": [], "point": null, "verdict": "배리가능"}, {"sojae": "메컵", "spend": 11301577, "buy": 625, "roas": 163, "ctr": 3.27, "imp": 349049, "thruRate": 16.4, "active": true, "nAds": 6, "parent": null, "cat": [], "point": null, "verdict": "배리가능"}, {"sojae": "세안습관", "spend": 10034061, "buy": 535, "roas": 157, "ctr": 1.46, "imp": 606041, "thruRate": 6.3, "active": true, "nAds": 4, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "페네트레7번", "spend": 6113440, "buy": 319, "roas": 161, "ctr": 1.68, "imp": 191327, "thruRate": 7.0, "active": true, "nAds": 3, "parent": null, "cat": [], "point": null, "verdict": "배리가능"}, {"sojae": "골룸", "spend": 5193629, "buy": 298, "roas": 168, "ctr": 2.25, "imp": 257175, "thruRate": 16.4, "active": true, "nAds": 3, "parent": null, "cat": [], "point": null, "verdict": "배리가능"}, {"sojae": "세안습관2", "spend": 1112866, "buy": 60, "roas": 167, "ctr": 3.7, "imp": 19207, "thruRate": 17.2, "active": true, "nAds": 1, "parent": "세안습관", "cat": ["후킹", "플로우"], "point": "후킹 강화 + 제품 노출 조정", "verdict": "배리가능"}, {"sojae": "2주기적", "spend": 1011294, "buy": 50, "roas": 152, "ctr": 1.71, "imp": 41742, "thruRate": 25.9, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "문투", "spend": 1086177, "buy": 53, "roas": 138, "ctr": 0.92, "imp": 115926, "thruRate": 11.5, "active": false, "nAds": 2, "parent": "문질문질", "cat": ["후킹"], "point": "문질문질 후킹 삭제", "verdict": "기각"}, {"sojae": "유튭", "spend": 681780, "buy": 21, "roas": 95, "ctr": 2.51, "imp": 20571, "thruRate": 12.0, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "블랙", "spend": 580004, "buy": 22, "roas": 116, "ctr": 0.86, "imp": 40846, "thruRate": 4.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "아니아니", "spend": 578287, "buy": 27, "roas": 158, "ctr": 1.74, "imp": 29968, "thruRate": 11.9, "active": false, "nAds": 1, "parent": "아니", "cat": ["후킹"], "point": "후킹 배리", "verdict": "기각"}, {"sojae": "개밤티", "spend": 477895, "buy": 21, "roas": 146, "ctr": 1.72, "imp": 14283, "thruRate": 16.5, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "아니", "spend": 471519, "buy": 20, "roas": 126, "ctr": 1.61, "imp": 25702, "thruRate": 6.9, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "화장떡짐", "spend": 448431, "buy": 22, "roas": 145, "ctr": 2.17, "imp": 12158, "thruRate": 6.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "세안전후", "spend": 581290, "buy": 23, "roas": 126, "ctr": 1.36, "imp": 18077, "thruRate": 18.7, "active": true, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "피지똥", "spend": 409545, "buy": 14, "roas": 97, "ctr": 1.12, "imp": 33464, "thruRate": 8.2, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "신부", "spend": 394329, "buy": 17, "roas": 132, "ctr": 5.01, "imp": 6629, "thruRate": 12.6, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "트러", "spend": 390429, "buy": 14, "roas": 95, "ctr": 1.32, "imp": 22123, "thruRate": 5.9, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "세투", "spend": 310967, "buy": 13, "roas": 129, "ctr": 1.26, "imp": 19771, "thruRate": 6.2, "active": false, "nAds": 1, "parent": "세안습관", "cat": ["후킹"], "point": "세안습관 후킹 삭제", "verdict": "기각"}, {"sojae": "세안", "spend": 385432, "buy": 6, "roas": 41, "ctr": 1.42, "imp": 16675, "thruRate": 6.0, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "밤티", "spend": 400944, "buy": 13, "roas": 93, "ctr": 1.39, "imp": 23344, "thruRate": 4.6, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "선물-4", "spend": 252372, "buy": 13, "roas": 160, "ctr": 1.33, "imp": 9564, "thruRate": 0.0, "active": true, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "배리가능"}, {"sojae": "문삼", "spend": 244468, "buy": 15, "roas": 198, "ctr": 1.04, "imp": 17328, "thruRate": 14.8, "active": true, "nAds": 1, "parent": "문투", "cat": ["특정부분"], "point": "CTR 개선 위해 소스 교체", "verdict": "배리가능"}, {"sojae": "노답", "spend": 240516, "buy": 7, "roas": 83, "ctr": 1.59, "imp": 6108, "thruRate": 14.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "우울증", "spend": 238302, "buy": 6, "roas": 77, "ctr": 2.23, "imp": 8038, "thruRate": 8.5, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "아침", "spend": 233992, "buy": 4, "roas": 51, "ctr": 2.67, "imp": 5765, "thruRate": 18.1, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "핀셋", "spend": 227477, "buy": 11, "roas": 137, "ctr": 1.1, "imp": 13759, "thruRate": 12.7, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "문사", "spend": 218335, "buy": 9, "roas": 123, "ctr": 1.42, "imp": 12241, "thruRate": 7.0, "active": false, "nAds": 1, "parent": "문삼", "cat": ["플로우"], "point": "구성 재배치", "verdict": "기각"}, {"sojae": "두껍", "spend": 214761, "buy": 8, "roas": 112, "ctr": 1.21, "imp": 9585, "thruRate": 4.4, "active": false, "nAds": 1, "parent": "두꺼비턱", "cat": ["타겟"], "point": "남성 소스로 교체", "verdict": "기각"}, {"sojae": "기삼", "spend": 205284, "buy": 8, "roas": 106, "ctr": 1.48, "imp": 13749, "thruRate": 11.5, "active": false, "nAds": 1, "parent": "기투", "cat": ["후킹", "플로우"], "point": "모낭충 조기노출 + 제품 지연", "verdict": "기각"}, {"sojae": "성분제험1", "spend": 383027, "buy": 15, "roas": 116, "ctr": 0.88, "imp": 16485, "thruRate": 0.0, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "아투", "spend": 178769, "buy": 5, "roas": 95, "ctr": 1.32, "imp": 6343, "thruRate": 9.5, "active": false, "nAds": 1, "parent": "아침", "cat": ["플로우", "특정부분"], "point": "중복정보 제거 + 제품 조기 노출", "verdict": "기각"}, {"sojae": "올영", "spend": 172047, "buy": 8, "roas": 127, "ctr": 2.32, "imp": 5434, "thruRate": 11.6, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "셀라딕스2", "spend": 165635, "buy": 6, "roas": 108, "ctr": 1.25, "imp": 8539, "thruRate": 10.3, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "오리엔클오", "spend": 149627, "buy": 8, "roas": 155, "ctr": 1.61, "imp": 4960, "thruRate": 10.5, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "요철", "spend": 269497, "buy": 7, "roas": 88, "ctr": 3.36, "imp": 5151, "thruRate": 7.5, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "요투", "spend": 257223, "buy": 12, "roas": 146, "ctr": 2.88, "imp": 8875, "thruRate": 10.6, "active": false, "nAds": 2, "parent": "요철", "cat": ["CTA", "특정부분"], "point": "CTA 보강 + 요철 강조", "verdict": "기각"}, {"sojae": "짝남", "spend": 139944, "buy": 5, "roas": 93, "ctr": 1.27, "imp": 5650, "thruRate": 10.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "3분전3분후", "spend": 136955, "buy": 5, "roas": 101, "ctr": 1.7, "imp": 3530, "thruRate": 5.1, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "문씻문씻", "spend": 135191, "buy": 5, "roas": 119, "ctr": 1.27, "imp": 6797, "thruRate": 7.2, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "약국품절", "spend": 113427, "buy": 4, "roas": 99, "ctr": 1.39, "imp": 3313, "thruRate": 10.7, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "소개", "spend": 111459, "buy": 3, "roas": 86, "ctr": 1.51, "imp": 5970, "thruRate": 8.7, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "대박", "spend": 105772, "buy": 1, "roas": 24, "ctr": 1.91, "imp": 3558, "thruRate": 12.5, "active": true, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "기사", "spend": 104167, "buy": 1, "roas": 22, "ctr": 1.2, "imp": 8245, "thruRate": 10.4, "active": false, "nAds": 1, "parent": "기삼", "cat": ["타겟", "특정부분"], "point": "남성 소스 교체 + 전문가 대본 삭제", "verdict": "기각"}, {"sojae": "야추", "spend": 100025, "buy": 4, "roas": 96, "ctr": 1.11, "imp": 7661, "thruRate": 9.8, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "낑순", "spend": 98198, "buy": 3, "roas": 82, "ctr": 1.9, "imp": 2585, "thruRate": 7.1, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "세계", "spend": 95636, "buy": 2, "roas": 61, "ctr": 1.88, "imp": 3137, "thruRate": 5.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "기투", "spend": 94694, "buy": 2, "roas": 55, "ctr": 1.6, "imp": 4382, "thruRate": 10.7, "active": false, "nAds": 1, "parent": "기생", "cat": ["특정부분"], "point": "모낭충 USP 추가 설명", "verdict": "기각"}, {"sojae": "화장빡침", "spend": 91245, "buy": 2, "roas": 62, "ctr": 1.79, "imp": 1840, "thruRate": 14.3, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}, {"sojae": "여드름", "spend": 89073, "buy": 3, "roas": 104, "ctr": 1.81, "imp": 2370, "thruRate": 16.6, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각"}], "hmAge": [{"seg": "18-24", "roas": 119, "spend": 2316697, "buy": 96, "cpm": 10687, "ctr": 1.16, "imp": 216781, "share": 9}, {"seg": "25-34", "roas": 143, "spend": 6449072, "buy": 303, "cpm": 17396, "ctr": 1.7, "imp": 370722, "share": 24}, {"seg": "35-44", "roas": 156, "spend": 9874423, "buy": 490, "cpm": 36530, "ctr": 3.33, "imp": 270309, "share": 37}, {"seg": "45-54", "roas": 151, "spend": 6651894, "buy": 316, "cpm": 51104, "ctr": 4.25, "imp": 130164, "share": 25}, {"seg": "55-64", "roas": 120, "spend": 1295067, "buy": 49, "cpm": 59672, "ctr": 4.89, "imp": 21703, "share": 5}, {"seg": "65+", "roas": 127, "spend": 152035, "buy": 6, "cpm": 36759, "ctr": 3.14, "imp": 4136, "share": 1}], "hmGender": [{"seg": "여성", "roas": 149, "spend": 18027862, "buy": 859, "cpm": 38197, "ctr": 3.44, "imp": 471972, "share": 68}, {"seg": "남성", "roas": 143, "spend": 8609857, "buy": 398, "cpm": 16000, "ctr": 1.53, "imp": 538125, "share": 32}], "recent4": {"세안습관2": [{"d": "6/28", "roas": 152, "buy": 9, "ctr": 3.74}, {"d": "6/29", "roas": 81, "buy": 5, "ctr": 3.64}, {"d": "6/30", "roas": 166, "buy": 18, "ctr": 3.73}, {"d": "7/1", "roas": 151, "buy": 5, "ctr": 4.83}]}, "asof": {"max": "5/27~7/3", "kpi": "7/1", "heatmap": "6/27~7/3(7일)", "series": "6/25~7/1"}};
+const BEP=160, TARGET=180;
+const D=V5;
+function fmt(n){return n==null?'—':(n>=10000?(n/10000).toFixed(0)+'만':n.toLocaleString());}
+function verdictInfo(v){return {'테스트중':['⏳ 테스트중','v-test','j-test'],'배리가능':['🟡 배리가능','v-beri','j-beri'],'잠재력':['🔷 잠재력','v-pot','j-pot'],'기각':['🔴 기각','v-rej','j-rej']}[v]||['—','v-test','j-test'];}
+const CATS=['후킹','CTA','타겟','플로우','특정부분'];
+const CATCOLOR={'후킹':'var(--cat-hook)','CTA':'var(--cat-cta)','타겟':'var(--cat-target)','플로우':'var(--cat-flow)','특정부분':'var(--cat-part)'};
 
-// 판정 라벨/클래스
-function judgeInfo(d){
-  if(d.judge==='유지'||(d.roas!==null&&d.roas>=TARGET)) return ['✅ 유지','j-keep'];
-  if(d.judge==='배리가능') return ['🟡 배리가능','j-beri'];
-  if(d.judge==='중단') return ['🔴 중단','j-stop'];
-  return ['⏳ 대기','j-wait'];
-}
-function fmt(n){return n===null?'—':(n>=10000?(n/10000).toFixed(0)+'만':n.toLocaleString());}
-function pct(n){return n===null?'—':n+'%';}
-const has=d=>d.roas!==null&&d.spend!==null;
-
-// ── KPI 바 ──
-const active=data.filter(has);
-const totalSpend=active.reduce((s,d)=>s+d.spend,0);
-const totalBuy=active.reduce((s,d)=>s+d.buy,0);
-const wAvgRoas=Math.round(active.reduce((s,d)=>s+d.roas*d.spend,0)/totalSpend);
-const keepN=active.filter(d=>judgeInfo(d)[1]==='j-keep').length;
-const beriN=active.filter(d=>judgeInfo(d)[1]==='j-beri').length;
+const kpi={spend:3568388,roas:137,buy:150,ctr:2.28,cpm:27309};
 document.getElementById('kpibar').innerHTML=`
-  <div class="kpi"><span class="kv">${fmt(totalSpend)}</span><span class="kk">총 지출(성과행)</span></div>
-  <div class="kpi"><span class="kv" style="color:${wAvgRoas>=BEP?'var(--green)':'var(--red)'}">${wAvgRoas}%</span><span class="kk">가중평균 ROAS</span></div>
-  <div class="kpi"><span class="kv">${totalBuy}</span><span class="kk">총 구매</span></div>
-  <div class="kpi"><span class="kv" style="color:var(--green)">${beriN}</span><span class="kk">🟡 배리가능</span></div>
-  <div class="kpi"><span class="kv" style="color:var(--ink3)">${active.length}</span><span class="kk">성과조회 소재</span></div>`;
+  <div class="kpi"><span class="kv">${fmt(kpi.spend)}</span><span class="kk">지출</span></div>
+  <div class="kpi"><span class="kv" style="color:${kpi.roas>=BEP?'var(--green)':'var(--red)'}">${kpi.roas}%</span><span class="kk">ROAS</span></div>
+  <div class="kpi"><span class="kv">${kpi.buy}</span><span class="kk">구매</span></div>
+  <div class="kpi"><span class="kv">${kpi.ctr}%</span><span class="kk">CTR</span></div>
+  <div class="kpi"><span class="kv" style="color:var(--ink3)">₩${kpi.cpm.toLocaleString()}</span><span class="kk">CPM</span></div>`;
 
-// ── 특이값 ──
-// 고효율(ROAS>=BEP & 배리가능/유지) / 배리후보(구매>=4 & ROAS<BEP) / 떠오름(대기 중 ROAS>=BEP) / 중단경고(중단)
+const SIG={
+  high:[{name:'두꺼비턱',gen:'신규(LVT)',roas:164,series:'두꺼비턱'},{name:'골룸',gen:'신규',roas:165,series:'골룸'},{name:'세안습관2',gen:'세안습관→세안습관2',roas:151,series:'세안습관2'}],
+  rising:[{name:'세안습관2',gen:'세안습관→세안습관2',firstSeen:'6/26',roas:151,cumSpend:1112866,cumBuy:60,series:'세안습관2'}],
+  beri:[{name:'유튭',gen:'신규',roas:98,buy:19,spend:591648,point:'인스타→유튜브 컨셉 변경'},{name:'세안습관',gen:'신규',roas:162,buy:402,spend:7301218,point:null}],
+  stop:[{name:'유튭_의중',roas:71,buy:7,spend:318905,ctr:2.22,reason:'어제 ROAS 0.71 — 기준 크게 하회'},{name:'세안습관_리엔',roas:82,buy:2,spend:73990,ctr:1.26,reason:'ROAS 0.82 + CTR 1.26% 낮음'},{name:'개밤티_리엔',roas:128,buy:5,spend:155235,ctr:1.90,reason:'ROAS 1.28 기준 하회 + CPM 높음'}]
+};
+const SERIES={
+ '두꺼비턱':[{d:'6/25',roas:240},{d:'6/26',roas:159},{d:'6/27',roas:207},{d:'6/28',roas:188},{d:'6/29',roas:148},{d:'6/30',roas:137},{d:'7/1',roas:164}],
+ '골룸':[{d:'6/25',roas:191},{d:'6/26',roas:215},{d:'6/27',roas:170},{d:'6/28',roas:165},{d:'6/29',roas:135},{d:'6/30',roas:157},{d:'7/1',roas:165}],
+ '세안습관2':[{d:'6/26',roas:193},{d:'6/27',roas:280},{d:'6/28',roas:152},{d:'6/29',roas:81},{d:'6/30',roas:166},{d:'7/1',roas:151}],
+};
 const sig=document.getElementById('signals');
-const highPerf=active.filter(d=>d.roas>=BEP).sort((a,b)=>b.roas-a.roas).slice(0,4);
-const beriCand=active.filter(d=>d.roas<BEP&&d.buy>=4).sort((a,b)=>b.buy-a.buy).slice(0,3);
-const rising=active.filter(d=>d.judge==='대기'&&d.roas>=BEP).sort((a,b)=>b.roas-a.roas).slice(0,4);
-const stopped=active.filter(d=>d.judge==='중단').sort((a,b)=>b.spend-a.spend).slice(0,3);
-function genLabel(d){return d.parent?`${d.parent}→${d.name}`:'신규';}
-function sigRows(arr,cls){return arr.length?arr.map(d=>`<div class="srow"><span class="sname">${d.name} <span class="gen">${genLabel(d)}</span></span><span class="sval ${cls}">${d.roas}%</span></div>`).join(''):'<div class="empty">해당 없음</div>';}
+function sRow(d,cls,val,idx,type){return `<div class="srow sig-click" data-type="${type}" data-idx="${idx}"><span class="sname">${d.name} <span class="gen">${d.gen||''}</span></span><span class="sval ${cls}">${val} ›</span></div>`;}
 sig.innerHTML=`
-  <div class="scard green"><div class="stip"></div><h3>🟢 고효율</h3><div class="desc">ROAS ≥ BEP 140% · 유지·확장 대상</div>${sigRows(highPerf,'up')}</div>
-  <div class="scard blue"><div class="stip"></div><h3>📈 떠오름</h3><div class="desc">판정 대기 중 ROAS가 BEP 돌파 (신성)</div>${sigRows(rising,'up')}</div>
-  <div class="scard amber"><div class="stip"></div><h3>💰 배리후보</h3><div class="desc">구매 4건+ 이지만 ROAS는 BEP 밑 (설득력 있음)</div>${beriCand.length?beriCand.map(d=>`<div class="srow"><span class="sname">${d.name} <span class="gen">${genLabel(d)}</span></span><span class="sval mid">${d.buy}건·${d.roas}%</span></div>`).join(''):'<div class="empty">해당 없음</div>'}</div>
-  <div class="scard red"><div class="stip"></div><h3>🔴 중단</h3><div class="desc">지출 큰 순 · 학습 종료된 저효율</div>${sigRows(stopped,'dn')}</div>`;
+  <div class="scard green"><div class="stip"></div><h3>🟢 고효율</h3><div class="desc">어제 ROAS ≥ 160% · 클릭 시 7일 추이</div>${SIG.high.map((d,i)=>sRow(d,'up',d.roas+'%',i,'high')).join('')}</div>
+  <div class="scard blue"><div class="stip"></div><h3>📈 떠오름</h3><div class="desc">최근 게시 · 돌파 중 · 클릭 시 상세</div>${SIG.rising.map((d,i)=>sRow(d,'up',d.roas+'%',i,'rising')).join('')}</div>
+  <div class="scard amber"><div class="stip"></div><h3>💰 배리후보</h3><div class="desc">전환 나오나 ROAS 기준 밑 · 클릭 시 방향</div>${SIG.beri.map((d,i)=>sRow(d,'mid',d.buy+'건·'+d.roas+'%',i,'beri')).join('')}</div>
+  <div class="scard red"><div class="stip"></div><h3>🔴 24h 내 중단</h3><div class="desc">어제→오늘 꺼진 소재 · 클릭 시 사유</div>${SIG.stop.map((d,i)=>sRow(d,'dn',d.roas+'%',i,'stop')).join('')}</div>`;
 
-// ── 타겟 불일치 ──
-const mm=data.filter(d=>d.mismatch);
-const mmEl=document.getElementById('mismatch');
-if(mm.length){
-  mmEl.innerHTML=mm.map(d=>{
-    const conv=d.convTarget.replace('_',' ');
-    const cpm=d.cpmTarget.replace('_',' ');
-    return `<div class="mmcard"><div class="mmname">🎯 ${d.name} <span class="lgen" style="font-weight:400">${genLabel(d)}</span></div>
-      <div class="mmflow"><span class="mmbox mmconv">전환 ${conv}</span><span class="mmarrow">≠</span><span class="mmbox mmcpm">노출 ${cpm}</span></div>
-      <div class="mmrec">💡 전환은 <b>${conv}</b>에서 나는데 노출은 <b>${cpm}</b>에 쏠림 → <b>${conv} 전용 광고세트</b> 개설 제안</div></div>`;
+const testing=document.getElementById('testing');
+const testCards=D.sojae.filter(d=>d.verdict==='테스트중' || (d.active && d.parent));
+testCards.sort((a,b)=>{const o={'테스트중':0,'배리가능':1,'잠재력':2,'기각':3};return (o[a.verdict]-o[b.verdict])||(b.spend-a.spend);});
+if(testCards.length){
+  testing.innerHTML=testCards.map(d=>{
+    const [vt,vc]=verdictInfo(d.verdict);
+    const cats=(d.cat||[]).map(c=>`<span class="catchip cat-${c}">${c}</span>`).join('');
+    return `<div class="test-card sojae-click" data-name="${d.sojae}">
+      <div class="test-top"><div class="test-name">${d.sojae}${d.parent?`<span class="p">← ${d.parent}</span>`:''}</div><span class="vbadge ${vc}">${vt}</span></div>
+      <div class="test-metrics">
+        <div class="tm"><span class="tk">ROAS</span><span class="tv" style="color:${d.roas>=BEP?'var(--green)':'var(--red)'}">${d.roas}%</span></div>
+        <div class="tm"><span class="tk">구매</span><span class="tv">${d.buy}</span></div>
+        <div class="tm"><span class="tk">누적지출</span><span class="tv">${fmt(d.spend)}</span></div>
+        <div class="tm"><span class="tk">상태</span><span class="tv">${d.active?'<span style="color:var(--green)">●</span>':'<span style="color:var(--ink3)">○</span>'}</span></div>
+      </div>${cats?`<div class="catchips">${cats}</div>`:''}</div>`;
   }).join('');
-} else { mmEl.innerHTML='<div class="empty" style="padding:14px">타겟 불일치 소재 없음</div>'; }
+} else testing.innerHTML='<div class="empty">4.5만 미만 테스트중 소재 없음 (상위 소재 대부분 학습 완료)</div>';
 
-// ── 가설 검증 ──
-const vEl=document.getElementById('verdicts');
-const verds=data.filter(d=>d.verdict);
-const vlabel={accept:['✅ 수용','v-accept'],reject:['❌ 기각','v-reject'],partial:['🔶 부분','v-partial']};
-vEl.innerHTML=verds.map(d=>{
-  const [vt,vc]=vlabel[d.verdict.type];
-  const lesson=d.verdict.type==='reject'?`<div class="lesson"><b>📌 레슨런</b> "${d.point||'변경'}" → 이 방향은 효과 없었음. 재시도 지양.</div>`:
-    (d.verdict.type==='accept'?`<div class="lesson" style="border-color:var(--green)"><b style="color:var(--green)">📌 레슨런</b> "${d.point||'변경'}" → 검증됨. 유사 계보에 재활용 가능.</div>`:'');
-  return `<div class="lrow" style="cursor:default"><span class="lname">${d.name} <span class="lgen">${d.parent}→${d.name}</span></span>
-    <div style="flex:1;font-size:11px;color:var(--ink2);padding:0 12px">${d.point||'—'}</div>
-    <span style="font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums;margin-right:4px">${d.verdict.detail}</span>
-    <span class="verdict ${vc}">${vt}</span></div>${lesson}`;
-}).join('');
-
-// ── 리더보드 ──
 const boards=[
-  {key:'hook',label:'후크율',unit:'%',icon:'🎣',desc:'도입 3초 잡는 힘',color:'var(--blue)'},
+  {key:'thruRate',label:'지속률',unit:'%',icon:'⏱️',desc:'노출 중 끝까지 본 %',color:'var(--purple)'},
   {key:'ctr',label:'CTR',unit:'%',icon:'👆',desc:'클릭 끌어내는 힘',color:'var(--green)'},
   {key:'roas',label:'ROAS',unit:'%',icon:'💵',desc:'매출 전환력',color:'var(--gold)'},
-  {key:'thruplay',label:'ThruPlay',unit:'',icon:'⏱️',desc:'끝까지 보게 하는 힘',color:'var(--purple)'},
+  {key:'buy',label:'구매수',unit:'',icon:'🛒',desc:'절대 판매량',color:'var(--blue)'},
 ];
 const ld=document.getElementById('leaders');
 boards.forEach(b=>{
-  const top=active.filter(d=>d[b.key]!==null).sort((x,y)=>y[b.key]-x[b.key]).slice(0,5);
+  const top=D.sojae.filter(d=>d[b.key]!=null&&d.spend>50000).sort((x,y)=>y[b.key]-x[b.key]).slice(0,5);
   const max=top[0][b.key];
   ld.innerHTML+=`<div class="lbcard"><div class="lbhead"><span class="lbicon">${b.icon}</span><div><div class="lbtitle">${b.label}</div><div class="lbdesc">${b.desc}</div></div></div>
-    <div class="lblist">${top.map((d,i)=>`<div class="lbrow"><span class="lbrank">${i+1}</span><span class="lbname">${d.name}<span class="lbgen">${d.gubun}</span></span><div class="lbbar"><div class="lbfill" style="width:${Math.round(d[b.key]/max*100)}%;background:${b.color}"></div></div><span class="lbval">${d[b.key]}${b.unit}</span></div>`).join('')}</div></div>`;
+    <div class="lblist">${top.map((d,i)=>`<div class="lbrow sojae-click" data-name="${d.sojae}"><span class="lbrank">${i+1}</span><span class="lbname">${d.sojae}</span><div class="lbbar"><div class="lbfill" style="width:${Math.round(d[b.key]/max*100)}%;background:${b.color}"></div></div><span class="lbval">${d[b.key]}${b.unit}</span></div>`).join('')}</div></div>`;
 });
 
-// ── 계보 ──
-const names=new Set(data.map(d=>d.name));
-// 루트 = parent 없음이면서 자식 있는 것 + parent가 성과행에 없는 소재의 그 parent(가상 루트)
+const names=new Set(D.sojae.map(d=>d.sojae));
+const bySojae={}; D.sojae.forEach(d=>bySojae[d.sojae]=d);
 const childByParent={};
-data.forEach(d=>{if(d.parent){(childByParent[d.parent]=childByParent[d.parent]||[]).push(d);}});
-const virtualRoots=[...new Set(data.filter(d=>d.parent&&!names.has(d.parent)).map(d=>d.parent))];
-const realRoots=data.filter(d=>!d.parent&&childByParent[d.name]);
+D.sojae.forEach(d=>{if(d.parent){(childByParent[d.parent]=childByParent[d.parent]||[]).push(d);}});
+const realRoots=D.sojae.filter(d=>!d.parent&&childByParent[d.sojae]);
+const virtualRoots=[...new Set(D.sojae.filter(d=>d.parent&&!names.has(d.parent)).map(d=>d.parent))];
 const lin=document.getElementById('lineage');
-let linCount=0;
-
-function famOf(rootName){
-  const fam=[]; let frontier=[rootName];
-  while(frontier.length){const nx=[];data.forEach(d=>{if(frontier.includes(d.parent)){fam.push(d);nx.push(d.name);}});frontier=nx;}
-  return fam;
+function famOf(root){const fam=[];let fr=[root];while(fr.length){const nx=[];D.sojae.forEach(d=>{if(fr.includes(d.parent)){fam.push(d);nx.push(d.sojae);}});fr=nx;}return fam;}
+function metricHTML(d){return `<div class="lmetrics">
+  <div class="lm"><span class="lk">ROAS</span><span class="lv">${d.roas}%</span></div>
+  <div class="lm"><span class="lk">지속률</span><span class="lv">${d.thruRate}%</span></div>
+  <div class="lm"><span class="lk">CTR</span><span class="lv">${d.ctr}%</span></div>
+  <div class="lm"><span class="lk">구매</span><span class="lv">${d.buy}</span></div></div>`;}
+function variBar(cats){return `<div class="varibar">${CATS.map(c=>{const on=(cats||[]).includes(c);return `<div class="vari-ax ${on?'on':''}" style="--c:${CATCOLOR[c]}"><div class="vlabel">${c}</div><div class="vdot"></div></div>`;}).join('')}</div>`;}
+function renderChild(c,champ){
+  const [jt,,jc]=verdictInfo(c.verdict);
+  return `<div class="child sojae-click" data-name="${c.sojae}">
+    <div class="child-top"><span class="lname">${c.sojae===champ?'<span class="crown">👑</span>':''}${c.sojae}</span>${metricHTML(c)}<span class="judge ${jc}">${jt}</span></div>
+    ${variBar(c.cat)}
+    ${c.point?`<div class="pointbox"><span class="plabel">🔧 배리포인트</span>${c.point}</div>`:''}</div>`;
 }
-function metricHTML(d){
-  return `<div class="lmetrics">
-    <div class="lm"><span class="lk">ROAS</span><span class="lv">${pct(d.roas)}</span></div>
-    <div class="lm"><span class="lk">후크율</span><span class="lv">${pct(d.hook)}</span></div>
-    <div class="lm"><span class="lk">CTR</span><span class="lv">${pct(d.ctr)}</span></div>
-    <div class="lm"><span class="lk">구매</span><span class="lv">${d.buy===null?'—':d.buy}</span></div></div>`;
-}
-function renderChild(c,champName){
-  const [jt,jc]=judgeInfo(c);
-  const vmap={accept:['✅ 가설수용','v-accept'],reject:['❌ 가설기각','v-reject'],partial:['🔶 부분','v-partial']};
-  const vbadge=c.verdict?`<span class="verdict ${vmap[c.verdict.type][1]}">${vmap[c.verdict.type][0]}</span>`:'';
-  const weakb=c.weakness?`<span class="weak">${c.weakness}↓</span>`:'';
-  return `<div class="child"><div class="cleft"><span class="lname">${c.name===champName?'<span class="crown">👑</span>':''}${c.name}${weakb} <span class="lgen">${c.id}</span></span></div>
-    ${metricHTML(c)}<span class="judge ${jc}">${jt}</span></div>
-    ${c.point?`<div class="pointbox"><span class="plabel">🔧 배리포인트</span>${c.point}${vbadge}</div>`:''}`;
-}
-function renderLineage(rootName, rootObj){
-  const fam=famOf(rootName);
-  const scored=fam.filter(has);
-  const champ=scored.length?scored.reduce((a,b)=>b.roas>a.roas?b:a):null;
-  linCount+=fam.length+(rootObj?1:0);
-  const rEl=document.createElement('div'); rEl.className='lrow root';
-  if(rootObj){
-    const [jt,jc]=judgeInfo(rootObj);
-    rEl.innerHTML=`<span class="ltoggle">▶</span><span class="lname">${rootObj.name===(champ&&champ.name)?'<span class="crown">👑</span>':''}${rootName} <span class="lgen">${fam.length} 배리</span></span>${metricHTML(rootObj)}<span class="judge ${jc}">${jt}</span>`;
+let linCnt=0;
+function renderLineage(rootName,rootObj){
+  const fam=famOf(rootName); const scored=fam.filter(x=>x.spend);
+  const champ=scored.length?scored.reduce((a,b)=>b.roas>a.roas?b:a).sojae:null;
+  linCnt++;
+  const rEl=document.createElement('div');rEl.className='lrow root';
+  if(rootObj){const [jt,,jc]=verdictInfo(rootObj.verdict);
+    rEl.innerHTML=`<span class="ltoggle">▶</span><span class="lname">${rootObj.sojae===champ?'<span class="crown">👑</span>':''}${rootName} <span class="lgen">${fam.length} 배리</span></span>${metricHTML(rootObj)}<span class="judge ${jc}">${jt}</span>`;
   } else {
-    rEl.innerHTML=`<span class="ltoggle">▶</span><span class="lname">${rootName} <span class="lgen">${fam.length} 배리 · 원본 성과없음</span></span><div class="lmetrics"><div class="lm"><span class="lk"></span><span class="lv" style="color:var(--ink3)">루트</span></div></div><span class="judge j-wait">—</span>`;
+    rEl.innerHTML=`<span class="ltoggle">▶</span><span class="lname">${rootName} <span class="lgen">${fam.length} 배리 · 원본 데이터없음</span></span><div class="lmetrics"><div class="lm"><span class="lv" style="color:var(--ink3)">루트</span></div></div><span class="judge j-test">—</span>`;
   }
-  const kids=document.createElement('div'); kids.className='children';
-  fam.filter(d=>d.name!==rootName).forEach(c=>{kids.innerHTML+=renderChild(c,champ&&champ.name);});
-  rEl.onclick=()=>{rEl.classList.toggle('open');kids.classList.toggle('show');};
-  lin.appendChild(rEl); lin.appendChild(kids);
+  const kids=document.createElement('div');kids.className='children';
+  fam.forEach(c=>{kids.innerHTML+=renderChild(c,champ);});
+  rEl.onclick=(e)=>{if(e.target.closest('.sojae-click')&&e.target.closest('.child'))return;rEl.classList.toggle('open');kids.classList.toggle('show');};
+  lin.appendChild(rEl);lin.appendChild(kids);
 }
-realRoots.forEach(r=>renderLineage(r.name,r));
+realRoots.forEach(r=>renderLineage(r.sojae,r));
 virtualRoots.forEach(rn=>renderLineage(rn,null));
-document.getElementById('lincount').textContent=(realRoots.length+virtualRoots.length)+'개 계보';
+document.getElementById('lincount').textContent=linCnt+'개 계보';
 
-// ── 전체 테이블 ──
-let curFilter='all',sortKey='date',sortDir=-1;
+let sortKey='spend',sortDir=-1;
 const tbody=document.getElementById('tbody');
-function render(){
-  let rows=data.filter(d=>{
-    if(curFilter==='all')return true;
-    if(curFilter==='신규')return d.gubun==='신규';
-    if(curFilter==='베리')return d.gubun==='베리';
-    const jc=judgeInfo(d)[1];
-    if(curFilter==='keep')return jc==='j-keep';
-    if(curFilter==='beri')return jc==='j-beri';
-    if(curFilter==='stop')return jc==='j-stop';
-    if(curFilter==='wait')return jc==='j-wait';
-    return true;
-  });
-  rows.sort((a,b)=>{
-    let x=a[sortKey],y=b[sortKey];
-    if(x===null)x=-1; if(y===null)y=-1;
-    return (typeof x==='number'?x-y:String(x).localeCompare(y))*sortDir;
-  });
+function renderTable(){
+  const rows=[...D.sojae].sort((a,b)=>{let x=a[sortKey],y=b[sortKey];if(x==null)x=-1;if(y==null)y=-1;return (typeof x==='number'?x-y:String(x).localeCompare(y))*sortDir;});
   tbody.innerHTML=rows.map(d=>{
-    const [jt,jc]=judgeInfo(d);
-    const roasColor=d.roas===null?'':(d.roas>=TARGET?'color:var(--green)':(d.roas>=BEP?'color:var(--amber)':'color:var(--red)'));
-    return `<tr>
-      <td><b>${d.name}</b>${d.weakness?`<span class="weak">${d.weakness}↓</span>`:''}${d.mismatch?'<span class="weak" style="background:#2c2110;color:var(--amber)">타겟</span>':''}</td><td style="color:var(--ink3)">${d.date}</td>
-      <td>${d.gubun==='베리'?'<span class="badge beri">베리</span>':'<span class="badge new">신규</span>'}</td>
+    const [vt,,vc]=verdictInfo(d.verdict);
+    const rc=d.roas>=TARGET?'var(--green)':(d.roas>=BEP?'var(--amber)':'var(--red)');
+    return `<tr class="sojae-click" data-name="${d.sojae}"><td><b>${d.sojae}</b></td>
       <td style="color:var(--ink3);font-size:10px">${d.parent||'—'}</td>
-      <td><b style="${roasColor}">${pct(d.roas)}</b></td>
-      <td>${pct(d.hook)}</td><td>${pct(d.ctr)}</td><td>${d.thruplay===null?'—':d.thruplay.toLocaleString()}</td>
-      <td>${d.buy===null?'—':d.buy}</td><td>${fmt(d.spend)}</td>
-      <td><span class="judge ${jc}">${jt}</span></td>
-    </tr>`;
+      <td><b style="color:${rc}">${d.roas}%</b></td><td>${d.ctr}%</td><td>${d.thruRate}%</td>
+      <td>${d.buy}</td><td>${fmt(d.spend)}</td>
+      <td><span class="judge ${vc}">${vt}</span></td>
+      <td>${d.active?'<span style="color:var(--green)">● 게시</span>':'<span style="color:var(--ink3)">○ 꺼짐</span>'}</td></tr>`;
   }).join('');
   document.getElementById('rowcount').textContent=rows.length+'개';
 }
-document.querySelectorAll('.fbtn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');curFilter=b.dataset.f;render();});
-document.querySelectorAll('thead th').forEach(th=>th.onclick=()=>{const k=th.dataset.s;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}render();});
-render();
+document.querySelectorAll('thead th').forEach(th=>th.onclick=()=>{const k=th.dataset.s;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}renderTable();});
+renderTable();
+
+function roasColor(r){if(r<BEP){const t=Math.max(0,(BEP-r)/50);return `rgba(224,89,77,${0.22+t*0.5})`;}const t=Math.min(1,(r-BEP)/50);return `rgba(63,184,127,${0.18+t*0.6})`;}
+function hmCell(d,avg){
+  let flag='';
+  if(d.roas>=avg&&d.share<15&&d.buy>2)flag='<span class="hm-flag flag-under">▲ 저평가</span>';
+  else if(d.roas<avg&&d.share>=25)flag='<span class="hm-flag flag-over">▼ 과투자</span>';
+  return `<div class="hm-cell" style="background:${roasColor(d.roas)}">${flag}<div class="hm-seg">${d.seg}</div><div class="hm-roas">${d.roas}%</div><div class="hm-sub">지출 ${d.share}% · ${fmt(d.spend)}<br>CPM ${d.cpm.toLocaleString()} · 구매 ${d.buy}</div></div>`;
+}
+const avgA=Math.round(D.hmAge.reduce((s,d)=>s+d.roas*d.spend,0)/D.hmAge.reduce((s,d)=>s+d.spend,0));
+const avgG=Math.round(D.hmGender.reduce((s,d)=>s+d.roas*d.spend,0)/D.hmGender.reduce((s,d)=>s+d.spend,0));
+document.getElementById('heatmap').innerHTML=`<div class="hm-wrap">
+  <div class="hm-block"><div class="hm-title">📅 연령대별<span class="axis">가중평균 ROAS ${avgA}% · 기준 ${BEP}%</span></div><div class="hm-grid hm-age">${D.hmAge.map(d=>hmCell(d,avgA)).join('')}</div></div>
+  <div class="hm-block"><div class="hm-title">⚧ 성별<span class="axis">가중평균 ROAS ${avgG}%</span></div><div class="hm-grid hm-gender">${D.hmGender.map(d=>hmCell(d,avgG)).join('')}</div></div>
+  <div class="hm-insight"><b>💡 진단</b> 최근 7일 효율 1위는 <b>35-44(156%)</b>·45-54(151%). 18-24는 CPM 최저(₩10,687)라 노출 많지만 ROAS 119%로 최하위 — 예산 누수. 여성(149%)이 남성(143%)보다 우위. <b>35-54 여성 집중</b> 권장.</div>
+</div>`;
+
+function openModal(html){let m=document.getElementById('nnModal');if(!m){m=document.createElement('div');m.id='nnModal';m.className='modal-bg';document.body.appendChild(m);}
+  m.innerHTML=`<div class="modal-box">${html}<div class="modal-x" onclick="document.getElementById('nnModal').classList.remove('on')">✕</div></div>`;
+  m.classList.add('on');m.onclick=(e)=>{if(e.target===m)m.classList.remove('on');};}
+function sparkline(days,w,h){
+  const vals=days.map(d=>d.roas);const max=Math.max(...vals,TARGET)*1.1,min=Math.min(...vals,0)*0.9;const rng=max-min||1;
+  const step=w/(days.length-1);const pts=days.map((d,i)=>[i*step,h-((d.roas-min)/rng)*h]);
+  const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const bepY=h-((BEP-min)/rng)*h, tgtY=h-((TARGET-min)/rng)*h;
+  const dots=pts.map((p,i)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="${days[i].roas>=BEP?'var(--green)':'var(--red)'}"/><text x="${p[0].toFixed(1)}" y="${(p[1]-9).toFixed(1)}" font-size="10" fill="var(--ink2)" text-anchor="middle">${days[i].roas}</text><text x="${p[0].toFixed(1)}" y="${h+15}" font-size="9" fill="var(--ink3)" text-anchor="middle">${days[i].d}</text>`).join('');
+  return `<svg viewBox="0 -20 ${w} ${h+40}" style="width:100%;height:auto">
+    <line x1="0" y1="${bepY.toFixed(1)}" x2="${w}" y2="${bepY.toFixed(1)}" stroke="var(--amber)" stroke-dasharray="4 3" stroke-width="1"/><text x="${w-2}" y="${(bepY-4).toFixed(1)}" font-size="8.5" fill="var(--amber)" text-anchor="end">기준 ${BEP}%</text>
+    <line x1="0" y1="${tgtY.toFixed(1)}" x2="${w}" y2="${tgtY.toFixed(1)}" stroke="var(--green)" stroke-dasharray="4 3" stroke-width="1"/><text x="${w-2}" y="${(tgtY-4).toFixed(1)}" font-size="8.5" fill="var(--green)" text-anchor="end">목표 ${TARGET}%</text>
+    <path d="${path}" fill="none" stroke="var(--blue)" stroke-width="2"/>${dots}</svg>`;
+}
+function sojaeModal(name){
+  const d=bySojae[name]; if(!d)return;
+  const [vt]=verdictInfo(d.verdict);
+  let chain=[d],cur=d;
+  while(cur&&cur.parent){const p=bySojae[cur.parent];if(p){chain.unshift(p);cur=p;}else{chain.unshift({sojae:cur.parent,virtual:true});break;}}
+  const chainHTML=chain.map((c,i)=>`${i?'<span class="m-lin-arrow">→</span>':''}<span style="font-weight:${c.sojae===name?700:400};color:${c.sojae===name?'var(--ink)':'var(--ink3)'}">${c.sojae}${c.roas?` <span style="font-size:9px">${c.roas}%</span>`:''}</span>`).join(' ');
+  const r4=D.recent4[name];
+  const catsHTML=(d.cat&&d.cat.length)?variBar(d.cat):'';
+  openModal(`<div class="m-head">${name} <span class="m-sub">${d.parent?d.parent+'→'+name:'신규'}</span></div>
+    <div class="m-asof">📅 전체기간 누적 · 판정 ${vt}</div>
+    <div class="m-lineage"><div style="font-size:10px;color:var(--ink3);margin-bottom:8px">🌳 계보</div><div class="m-lin-row">${chainHTML}</div>${catsHTML}${d.point?`<div class="pointbox" style="margin-top:10px"><span class="plabel">🔧 배리포인트</span>${d.point}</div>`:''}</div>
+    <div class="m-stats">
+      <div><span class="mk">ROAS(누적)</span><span class="mv" style="color:${d.roas>=BEP?'var(--green)':'var(--red)'}">${d.roas}%</span></div>
+      <div><span class="mk">구매</span><span class="mv">${d.buy}</span></div>
+      <div><span class="mk">누적지출</span><span class="mv">${fmt(d.spend)}</span></div>
+      <div><span class="mk">지속률</span><span class="mv">${d.thruRate}%</span></div>
+    </div>
+    ${r4?`<div style="font-size:11px;color:var(--ink3);margin:8px 0 4px">📅 최근 4일 ROAS</div><div class="m-chart">${sparkline(r4,560,120)}</div>`:'<div class="m-insight"><b>ℹ️</b> 이 소재의 최근 4일 일별 데이터는 아직 미조회 (닝닝이 필요 시 메타에서 조회)</div>'}`);
+}
+document.addEventListener('click',e=>{
+  const sj=e.target.closest('.sojae-click');
+  if(sj){sojaeModal(sj.dataset.name);return;}
+  const row=e.target.closest('.sig-click'); if(!row)return;
+  const type=row.dataset.type,i=+row.dataset.idx;
+  if(type==='high'){const d=SIG.high[i],days=SERIES[d.series];const best=days.reduce((a,b)=>b.roas>a.roas?b:a),worst=days.reduce((a,b)=>b.roas<a.roas?b:a);
+    openModal(`<div class="m-head">🟢 ${d.name}</div><div class="m-asof">📅 최근 7일(6/25~7/1) 일별 ROAS</div>
+      <div class="m-chart">${sparkline(days,560,140)}</div>
+      <div class="m-stats"><div><span class="mk">어제 ROAS</span><span class="mv">${d.roas}%</span></div><div><span class="mk">7일 평균</span><span class="mv">${Math.round(days.reduce((s,x)=>s+x.roas,0)/days.length)}%</span></div><div><span class="mk">정점</span><span class="mv">${best.roas}%(${best.d})</span></div><div><span class="mk">저점</span><span class="mv">${worst.roas}%(${worst.d})</span></div></div>
+      <div class="m-insight"><b>💡</b> 정점 ${best.d}(${best.roas}%) vs 저점 ${worst.d}(${worst.roas}%). 목표 180% 위로 안착하려면 정점일 조건(예산·타겟) 재현이 관건.</div>`);
+  } else if(type==='rising'){const d=SIG.rising[i],days=SERIES[d.series];
+    openModal(`<div class="m-head">📈 ${d.name}</div><div class="m-asof">📅 게시 ${d.firstSeen} ~ 현재</div>
+      ${days?`<div class="m-chart">${sparkline(days,560,140)}</div>`:''}
+      <div class="m-stats"><div><span class="mk">게시 시작</span><span class="mv">${d.firstSeen}</span></div><div><span class="mk">어제 ROAS</span><span class="mv">${d.roas}%</span></div><div><span class="mk">누적 지출</span><span class="mv">${fmt(d.cumSpend)}</span></div><div><span class="mk">누적 구매</span><span class="mv">${d.cumBuy}</span></div></div>
+      <div class="m-insight"><b>💡</b> ${d.firstSeen} 게시 후 누적 ${d.cumBuy}건. 원본 세안습관(누적 162%) 대비 안정적. 예산 증액으로 학습 완성 권장.</div>`);
+  } else if(type==='beri'){const d=SIG.beri[i];
+    openModal(`<div class="m-head">💰 ${d.name}</div><div class="m-asof">📅 전체기간 누적</div>
+      <div class="m-stats"><div><span class="mk">ROAS(누적)</span><span class="mv" style="color:var(--red)">${d.roas}%</span></div><div><span class="mk">구매</span><span class="mv">${d.buy}</span></div><div><span class="mk">누적지출</span><span class="mv">${fmt(d.spend)}</span></div><div><span class="mk">판정</span><span class="mv">🟡</span></div></div>
+      ${d.point?`<div class="pointbox"><span class="plabel">🔧</span>${d.point}</div>`:''}
+      <div class="m-insight"><b>🧭 다음 배리 방향</b> 전환 충분(${d.buy}건)하나 ROAS 미달. ${d.name==='유튭'?'유튜브 톤 유지+<b>말미 CTA 강화</b> → 실제 "유투" 배리가 이 방향.':'후킹 유지+제품 노출/CTA 손보기 권장.'}</div>`);
+  } else if(type==='stop'){const d=SIG.stop[i];
+    openModal(`<div class="m-head">🔴 ${d.name}</div><div class="m-asof">📅 24h 내 중단 · 중단 전 수치</div>
+      <div class="m-stats"><div><span class="mk">ROAS</span><span class="mv" style="color:var(--red)">${d.roas}%</span></div><div><span class="mk">CTR</span><span class="mv">${d.ctr}%</span></div><div><span class="mk">구매</span><span class="mv">${d.buy}</span></div><div><span class="mk">지출</span><span class="mv">${fmt(d.spend)}</span></div></div>
+      <div class="m-insight" style="border-color:var(--red)"><b style="color:var(--red)">⚠️ 사유</b> ${d.reason}</div>`);
+  }
+});
 </script>
 </body>
 </html>
