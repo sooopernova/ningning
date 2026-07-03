@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>닝닝 · 오리엔 소재 대시보드</title>
+<style>
+  :root{
+    --bg:#0f1419;--panel:#161d26;--panel2:#1c2430;--line:#26303d;
+    --ink:#e8edf2;--ink2:#9aa7b4;--ink3:#6b7785;
+    --green:#3fb87f;--green-bg:#0e2a1f;--amber:#e0a13c;--amber-bg:#2c2110;
+    --red:#e0594d;--red-bg:#2c1513;--blue:#4d9be0;--blue-bg:#0e2230;
+    --purple:#9b7cd4;--gold:#f0c14b;
+    --cat-hook:#4d9be0;--cat-cta:#e0954d;--cat-target:#3fb87f;--cat-flow:#9b7cd4;--cat-part:#e0a13c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Pretendard','Noto Sans KR',-apple-system,sans-serif;font-size:13px;line-height:1.5;padding:0 0 60px;}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 20px;}
+  header{border-bottom:1px solid var(--line);padding:18px 0;margin-bottom:22px;position:sticky;top:0;background:rgba(15,20,25,.92);backdrop-filter:blur(8px);z-index:50;}
+  .htop{display:flex;align-items:baseline;gap:14px;justify-content:space-between;}
+  .brand{display:flex;align-items:baseline;gap:11px;}
+  .logo{font-size:19px;font-weight:800;letter-spacing:-.5px;}
+  .logo .star{color:var(--gold);}
+  .sub{color:var(--ink3);font-size:11.5px;}
+  .meta-pill{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--ink2);}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+  .brandtabs{display:flex;gap:4px;margin-top:14px;align-items:center;}
+  .btab{padding:5px 14px;border-radius:7px;font-size:12px;color:var(--ink2);border:1px solid transparent;background:var(--panel2);}
+  h2{font-size:14px;font-weight:700;margin:26px 0 12px;display:flex;align-items:center;gap:9px;letter-spacing:-.2px;flex-wrap:wrap;}
+  h2 .count{font-size:11px;color:var(--ink3);font-weight:500;background:var(--panel2);padding:1px 8px;border-radius:10px;}
+  .asof{font-size:10px;color:var(--blue);font-weight:600;background:var(--blue-bg);padding:1px 8px;border-radius:10px;border:1px solid #1a3a52;}
+  .kpibar{display:flex;gap:22px;padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;}
+  .kpi{display:flex;flex-direction:column;}
+  .kpi .kv{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .kpi .kk{font-size:10px;color:var(--ink3);}
+  .signals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .scard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px;position:relative;overflow:hidden;}
+  .scard .stip{position:absolute;top:0;left:0;width:3px;height:100%;}
+  .scard.green .stip{background:var(--green);}.scard.blue .stip{background:var(--blue);}
+  .scard.amber .stip{background:var(--amber);}.scard.red .stip{background:var(--red);}
+  .scard h3{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:3px;}
+  .scard .desc{font-size:10.5px;color:var(--ink3);margin-bottom:11px;line-height:1.4;}
+  .srow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line);font-size:12px;cursor:pointer;margin:0 -6px;padding-left:6px;padding-right:6px;border-radius:5px;}
+  .srow:hover{background:rgba(255,255,255,.04);}
+  .srow:first-of-type{border-top:none;}
+  .sname{font-weight:600;display:flex;align-items:center;gap:6px;}
+  .sname .gen{font-size:9.5px;color:var(--ink3);font-weight:400;}
+  .sval{font-variant-numeric:tabular-nums;font-weight:700;}
+  .sval.up{color:var(--green);}.sval.dn{color:var(--red);}.sval.mid{color:var(--amber);}
+  .empty{color:var(--ink3);font-size:11px;padding:8px 0;font-style:italic;}
+  .test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+  .test-card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px;cursor:pointer;transition:border-color .12s;}
+  .test-card:hover{border-color:var(--ink3);}
+  .test-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .test-name{font-size:13px;font-weight:700;}
+  .test-name .p{font-size:9.5px;color:var(--ink3);font-weight:400;margin-left:4px;}
+  .vbadge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;}
+  .v-test{background:var(--panel2);color:var(--ink2);}
+  .v-beri{background:var(--amber-bg);color:var(--amber);}
+  .v-pot{background:var(--blue-bg);color:var(--blue);}
+  .v-rej{background:var(--red-bg);color:var(--red);}
+  .test-metrics{display:flex;gap:14px;font-size:10.5px;}
+  .test-metrics .tm{display:flex;flex-direction:column;}
+  .test-metrics .tk{color:var(--ink3);font-size:9px;}
+  .test-metrics .tv{font-weight:700;font-variant-numeric:tabular-nums;}
+  .catchips{display:flex;gap:4px;margin-top:9px;flex-wrap:wrap;}
+  .catchip{font-size:9px;padding:1px 8px;border-radius:9px;font-weight:600;}
+  .cat-후킹{background:rgba(77,155,224,.15);color:var(--cat-hook);}
+  .cat-CTA{background:rgba(224,149,77,.15);color:var(--cat-cta);}
+  .cat-타겟{background:rgba(63,184,127,.15);color:var(--cat-target);}
+  .cat-플로우{background:rgba(155,124,212,.15);color:var(--cat-flow);}
+  .cat-특정부분{background:rgba(224,161,60,.15);color:var(--cat-part);}
+  .leaders{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .lbcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;}
+  .lbhead{display:flex;align-items:center;gap:9px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+  .lbicon{font-size:18px;}.lbtitle{font-size:12.5px;font-weight:700;}.lbdesc{font-size:9.5px;color:var(--ink3);}
+  .lblist{display:flex;flex-direction:column;gap:9px;}
+  .lbrow{display:flex;align-items:center;gap:8px;cursor:pointer;}
+  .lbrank{font-size:10px;color:var(--ink3);font-weight:700;width:12px;}
+  .lbrow:first-child .lbrank{color:var(--gold);}
+  .lbname{font-size:11px;font-weight:600;color:var(--ink2);min-width:56px;}
+  .lbbar{flex:1;height:5px;background:var(--panel2);border-radius:3px;overflow:hidden;}
+  .lbfill{height:100%;border-radius:3px;}
+  .lbval{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;min-width:48px;text-align:right;}
+  .lineage{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .lrow{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--line);}
+  .lrow:hover{background:var(--panel2);}
+  .lrow.root{font-weight:700;}
+  .ltoggle{width:16px;color:var(--ink3);font-size:10px;transition:transform .15s;}
+  .lrow.open .ltoggle{transform:rotate(90deg);}
+  .lname{min-width:130px;display:flex;align-items:center;gap:7px;}
+  .crown{color:var(--gold);font-size:12px;}
+  .lgen{font-size:9.5px;color:var(--ink3);font-family:monospace;}
+  .lmetrics{display:flex;gap:14px;margin-left:auto;font-size:11.5px;}
+  .lm{font-variant-numeric:tabular-nums;text-align:right;min-width:46px;}
+  .lm .lk{display:block;font-size:9px;color:var(--ink3);}
+  .lm .lv{font-weight:700;}
+  .judge{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600;min-width:70px;text-align:center;}
+  .j-beri{background:var(--amber-bg);color:var(--amber);}
+  .j-pot{background:var(--blue-bg);color:var(--blue);}
+  .j-rej{background:var(--red-bg);color:var(--red);}
+  .j-test{background:var(--panel2);color:var(--ink3);}
+  .children{display:none;background:#11171f;}
+  .children.show{display:block;}
+  .child{padding:14px 16px 14px 40px;border-bottom:1px solid var(--line);border-left:2px solid var(--purple);margin-left:22px;cursor:pointer;}
+  .child:hover{background:#141b24;}
+  .child-top{display:flex;align-items:center;gap:12px;}
+  .varibar{display:flex;gap:6px;margin-top:11px;margin-bottom:4px;}
+  .vari-ax{flex:1;text-align:center;}
+  .vari-ax .vlabel{font-size:9px;color:var(--ink3);margin-bottom:4px;}
+  .vari-ax .vdot{height:6px;border-radius:3px;background:var(--panel2);}
+  .vari-ax.on .vdot{background:var(--c);}
+  .vari-ax.on .vlabel{color:var(--c);font-weight:700;}
+  .pointbox{font-size:11px;color:var(--ink);background:#1a1420;padding:8px 13px;margin-top:10px;border-left:2px solid var(--purple);line-height:1.5;border-radius:0 6px 6px 0;}
+  .pointbox .plabel{color:var(--purple);font-weight:700;font-size:10px;margin-right:7px;}
+  table{width:100%;border-collapse:collapse;font-size:11.5px;}
+  thead th{text-align:left;padding:9px 11px;color:var(--ink3);font-weight:600;font-size:10.5px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.4px;cursor:pointer;}
+  thead th:hover{color:var(--ink);}
+  tbody td{padding:9px 11px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
+  tbody tr{cursor:pointer;}
+  tbody tr:hover{background:var(--panel);}
+  .tbl-wrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .note{font-size:10px;color:var(--ink3);margin-top:6px;font-style:italic;}
+  .hm-wrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;}
+  .hm-block{margin-bottom:20px;}.hm-block:last-child{margin-bottom:0;}
+  .hm-title{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:10px;}
+  .hm-title .axis{font-size:10px;color:var(--ink3);font-weight:400;margin-left:6px;}
+  .hm-grid{display:grid;gap:8px;}
+  .hm-age{grid-template-columns:repeat(6,1fr);}
+  .hm-gender{grid-template-columns:repeat(2,1fr);max-width:420px;}
+  .hm-cell{border-radius:10px;padding:12px 13px;position:relative;border:1px solid var(--line);min-height:92px;display:flex;flex-direction:column;justify-content:space-between;}
+  .hm-seg{font-size:12px;font-weight:700;color:#fff;}
+  .hm-roas{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;margin:5px 0;color:#fff;}
+  .hm-sub{font-size:9.5px;line-height:1.5;color:rgba(255,255,255,.9);}
+  .hm-flag{position:absolute;top:8px;right:8px;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:5px;}
+  .flag-under{background:#0e2a1f;color:#5fe0a0;border:1px solid #1d6e4a;}
+  .flag-over{background:#2c1513;color:#ffab9e;border:1px solid #7a3028;}
+  .hm-insight{background:var(--panel2);border-left:2px solid var(--gold);padding:10px 14px;border-radius:7px;margin-top:14px;font-size:11px;line-height:1.6;color:var(--ink2);}
+  .hm-insight b{color:var(--gold);}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-bg.on{display:flex;}
+  .modal-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;max-width:640px;width:100%;position:relative;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  .modal-x{position:absolute;top:16px;right:18px;color:var(--ink3);cursor:pointer;font-size:15px;}
+  .modal-x:hover{color:var(--ink);}
+  .m-head{font-size:17px;font-weight:800;margin-bottom:4px;}
+  .m-head .m-sub{font-size:11px;color:var(--ink3);font-weight:400;font-family:monospace;margin-left:6px;}
+  .m-asof{font-size:10px;color:var(--blue);margin-bottom:14px;}
+  .m-chart{background:var(--panel2);border-radius:10px;padding:20px 16px 8px;margin-bottom:16px;}
+  .m-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+  .m-stats>div{background:var(--panel2);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;}
+  .m-stats .mk{font-size:9.5px;color:var(--ink3);}
+  .m-stats .mv{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .m-insight{background:var(--panel2);border-left:2px solid var(--gold);padding:11px 14px;border-radius:0 8px 8px 0;font-size:11.5px;line-height:1.65;color:var(--ink2);margin-top:10px;}
+  .m-insight b{color:var(--gold);margin-right:6px;}
+  .m-lineage{background:#11171f;border-radius:9px;padding:12px 14px;margin:12px 0;}
+  .m-lin-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:11.5px;flex-wrap:wrap;}
+  .m-lin-arrow{color:var(--purple);}
+  @media(max-width:980px){.signals,.leaders,.hm-age{grid-template-columns:repeat(2,1fr);}.m-stats{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="htop">
+      <div class="brand"><span class="logo"><span class="star">✦</span> 닝닝</span>
+        <span class="sub">오리엔 소재 진단 대시보드</span></div>
+      <div class="meta-pill"><span class="dot"></span> 메타 API 실측</div>
+    </div>
+    <div class="brandtabs"><div class="btab">오리엔 · 기준 ROAS 160% / 목표 180%</div></div>
+  </div>
+</header>
+<div class="wrap">
+
+  <h2>📊 계정 KPI <span class="asof">📅 7/2 하루 · 수동 스냅샷</span></h2>
+  <div class="kpibar" id="kpibar"></div>
+
+  <h2>🔔 오늘의 특이값 <span class="asof">📅 7/2 기준 · 수동 스냅샷</span></h2>
+  <div class="signals" id="signals"></div>
+  <div class="note">클릭 시 상세 · 고효율=7일 ROAS 추이 / 떠오름=게시·누적 / 배리후보=계보·방향 / 중단=24h내 꺼짐·사유</div>
+
+  <h2>🧪 테스트 중인 소재 <span class="asof">📅 전체기간 누적</span> <span class="count">4.5만 미만 학습 중 + 살아있는 배리</span></h2>
+  <div class="test-grid" id="testing"></div>
+  <div class="note">판정: 누적 &lt;4.5만=테스트중 / ≥4.5만 &amp; ROAS&lt;160%=기각 / ≥4.5만 &amp; ROAS≥160% &amp; 전환≥5=배리가능 / 전환&lt;5=잠재력 · 클릭 시 계보+최근4일</div>
+
+  <h2>🏅 지표별 강자 <span class="asof">📅 전체기간 누적</span> <span class="count">TOP 5</span></h2>
+  <div class="leaders" id="leaders"></div>
+  <div class="note">후킹률=25%시청÷노출(도입부 힘) · 지속률=ThruPlay÷노출(몰입 힘) · <b>최근 3일(7/1~7/3) 영상 데이터</b></div>
+
+  <h2>🌳 배리·디벨롭 계보 <span class="asof">📅 전체기간 누적</span> <span class="count" id="lincount"></span></h2>
+  <div class="lineage" id="lineage"></div>
+  <div class="note">👑 계보 챔피언 · 펼치면 <b>배리 5축(후킹/CTA/타겟/플로우/특정부분)</b> 시각화 · 소재 클릭 시 계보+최근4일</div>
+
+  <h2>📋 전체 소재 <span class="asof">📅 전체기간 누적</span> <span class="count" id="rowcount"></span></h2>
+  <div class="tbl-wrap"><table id="tbl">
+    <thead><tr>
+      <th data-s="sojae">소재</th><th data-s="parent">원본</th>
+      <th data-s="roas">ROAS</th><th data-s="hookRate">후킹률</th><th data-s="thruRate2">지속률</th><th data-s="ctr">CTR</th>
+      <th data-s="buy">구매</th><th data-s="spend">누적지출</th><th data-s="verdict">판정</th><th data-s="active">상태</th>
+    </tr></thead><tbody id="tbody"></tbody>
+  </table></div>
+
+  <h2>🌡️ 타겟 히트맵 <span class="asof">📅 최근 7일(6/27~7/3)</span> <span class="count">연령×성별 · 계정 전체</span></h2>
+  <div id="heatmap"></div>
+  <div class="note">색 진할수록 ROAS 높음 · ⚠️ 연령·성별 교차는 API 계정레벨 제약상 각 축 단독 집계</div>
+
+</div>
+<script>
+const V5={"sojae": [{"sojae": "두꺼비턱", "spend": 23182323, "buy": 1337, "roas": 174, "ctr": 2.76, "imp": 1002822, "thruRate": 15.1, "active": true, "nAds": 7, "parent": null, "cat": [], "point": null, "verdict": "배리가능", "hookRate": 32.7, "thruRate2": 17.0, "holdRate": 17.4, "vidImp": 32757}, {"sojae": "메컵", "spend": 11301577, "buy": 625, "roas": 163, "ctr": 3.27, "imp": 349049, "thruRate": 16.4, "active": true, "nAds": 6, "parent": null, "cat": [], "point": null, "verdict": "배리가능", "hookRate": 28.9, "thruRate2": 16.0, "holdRate": 14.5, "vidImp": 12713}, {"sojae": "세안습관", "spend": 10034061, "buy": 535, "roas": 157, "ctr": 1.46, "imp": 606041, "thruRate": 6.3, "active": true, "nAds": 4, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 10.5, "thruRate2": 6.5, "holdRate": 3.7, "vidImp": 15862}, {"sojae": "페네트레7번", "spend": 6113440, "buy": 319, "roas": 161, "ctr": 1.68, "imp": 191327, "thruRate": 7.0, "active": true, "nAds": 3, "parent": null, "cat": [], "point": null, "verdict": "배리가능", "hookRate": 15.2, "thruRate2": 13.0, "holdRate": 5.2, "vidImp": 37346}, {"sojae": "골룸", "spend": 5193629, "buy": 298, "roas": 168, "ctr": 2.25, "imp": 257175, "thruRate": 16.4, "active": true, "nAds": 3, "parent": null, "cat": [], "point": null, "verdict": "배리가능", "hookRate": 24.8, "thruRate2": 15.8, "holdRate": 13.9, "vidImp": 11304}, {"sojae": "세안습관2", "spend": 1112866, "buy": 60, "roas": 167, "ctr": 3.7, "imp": 19207, "thruRate": 17.2, "active": true, "nAds": 1, "parent": "세안습관", "cat": ["후킹", "플로우"], "point": "후킹 강화 + 제품 노출 조정", "verdict": "배리가능", "hookRate": 23.4, "thruRate2": 20.9, "holdRate": 10.1, "vidImp": 8975}, {"sojae": "2주기적", "spend": 1011294, "buy": 50, "roas": 152, "ctr": 1.71, "imp": 41742, "thruRate": 25.9, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "문투", "spend": 1086177, "buy": 53, "roas": 138, "ctr": 0.92, "imp": 115926, "thruRate": 11.5, "active": false, "nAds": 2, "parent": "문질문질", "cat": ["후킹"], "point": "문질문질 후킹 삭제", "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "유튭", "spend": 681780, "buy": 21, "roas": 95, "ctr": 2.51, "imp": 20571, "thruRate": 12.0, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 15.8, "thruRate2": 11.5, "holdRate": 5.2, "vidImp": 11969}, {"sojae": "블랙", "spend": 580004, "buy": 22, "roas": 116, "ctr": 0.86, "imp": 40846, "thruRate": 4.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "아니아니", "spend": 578287, "buy": 27, "roas": 158, "ctr": 1.74, "imp": 29968, "thruRate": 11.9, "active": false, "nAds": 1, "parent": "아니", "cat": ["후킹"], "point": "후킹 배리", "verdict": "기각", "hookRate": 17.3, "thruRate2": 13.0, "holdRate": 3.5, "vidImp": 23689}, {"sojae": "개밤티", "spend": 477895, "buy": 21, "roas": 146, "ctr": 1.72, "imp": 14283, "thruRate": 16.5, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 34.0, "thruRate2": 23.7, "holdRate": 11.4, "vidImp": 5735}, {"sojae": "아니", "spend": 471519, "buy": 20, "roas": 126, "ctr": 1.61, "imp": 25702, "thruRate": 6.9, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "화장떡짐", "spend": 448431, "buy": 22, "roas": 145, "ctr": 2.17, "imp": 12158, "thruRate": 6.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "세안전후", "spend": 581290, "buy": 23, "roas": 126, "ctr": 1.36, "imp": 18077, "thruRate": 18.7, "active": true, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 50.7, "thruRate2": 40.7, "holdRate": 19.8, "vidImp": 1876}, {"sojae": "피지똥", "spend": 409545, "buy": 14, "roas": 97, "ctr": 1.12, "imp": 33464, "thruRate": 8.2, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "신부", "spend": 394329, "buy": 17, "roas": 132, "ctr": 5.01, "imp": 6629, "thruRate": 12.6, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "트러", "spend": 390429, "buy": 14, "roas": 95, "ctr": 1.32, "imp": 22123, "thruRate": 5.9, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "세투", "spend": 310967, "buy": 13, "roas": 129, "ctr": 1.26, "imp": 19771, "thruRate": 6.2, "active": false, "nAds": 1, "parent": "세안습관", "cat": ["후킹"], "point": "세안습관 후킹 삭제", "verdict": "기각", "hookRate": 24.1, "thruRate2": 19.9, "holdRate": 10.2, "vidImp": 2023}, {"sojae": "세안", "spend": 385432, "buy": 6, "roas": 41, "ctr": 1.42, "imp": 16675, "thruRate": 6.0, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "밤티", "spend": 400944, "buy": 13, "roas": 93, "ctr": 1.39, "imp": 23344, "thruRate": 4.6, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "선물-4", "spend": 252372, "buy": 13, "roas": 160, "ctr": 1.33, "imp": 9564, "thruRate": 0.0, "active": true, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "배리가능", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "문삼", "spend": 244468, "buy": 15, "roas": 198, "ctr": 1.04, "imp": 17328, "thruRate": 14.8, "active": true, "nAds": 1, "parent": "문투", "cat": ["특정부분"], "point": "CTR 개선 위해 소스 교체", "verdict": "배리가능", "hookRate": 26.1, "thruRate2": 15.5, "holdRate": 14.5, "vidImp": 21592}, {"sojae": "노답", "spend": 240516, "buy": 7, "roas": 83, "ctr": 1.59, "imp": 6108, "thruRate": 14.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "우울증", "spend": 238302, "buy": 6, "roas": 77, "ctr": 2.23, "imp": 8038, "thruRate": 8.5, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "아침", "spend": 233992, "buy": 4, "roas": 51, "ctr": 2.67, "imp": 5765, "thruRate": 18.1, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "핀셋", "spend": 227477, "buy": 11, "roas": 137, "ctr": 1.1, "imp": 13759, "thruRate": 12.7, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "문사", "spend": 218335, "buy": 9, "roas": 123, "ctr": 1.42, "imp": 12241, "thruRate": 7.0, "active": false, "nAds": 1, "parent": "문삼", "cat": ["플로우"], "point": "구성 재배치", "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "두껍", "spend": 214761, "buy": 8, "roas": 112, "ctr": 1.21, "imp": 9585, "thruRate": 4.4, "active": false, "nAds": 1, "parent": "두꺼비턱", "cat": ["타겟"], "point": "남성 소스로 교체", "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "기삼", "spend": 205284, "buy": 8, "roas": 106, "ctr": 1.48, "imp": 13749, "thruRate": 11.5, "active": false, "nAds": 1, "parent": "기투", "cat": ["후킹", "플로우"], "point": "모낭충 조기노출 + 제품 지연", "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "성분제험1", "spend": 383027, "buy": 15, "roas": 116, "ctr": 0.88, "imp": 16485, "thruRate": 0.0, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "아투", "spend": 178769, "buy": 5, "roas": 95, "ctr": 1.32, "imp": 6343, "thruRate": 9.5, "active": false, "nAds": 1, "parent": "아침", "cat": ["플로우", "특정부분"], "point": "중복정보 제거 + 제품 조기 노출", "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "올영", "spend": 172047, "buy": 8, "roas": 127, "ctr": 2.32, "imp": 5434, "thruRate": 11.6, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "셀라딕스2", "spend": 165635, "buy": 6, "roas": 108, "ctr": 1.25, "imp": 8539, "thruRate": 10.3, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 11.4, "thruRate2": 10.3, "holdRate": 5.3, "vidImp": 6909}, {"sojae": "오리엔클오", "spend": 149627, "buy": 8, "roas": 155, "ctr": 1.61, "imp": 4960, "thruRate": 10.5, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "요철", "spend": 269497, "buy": 7, "roas": 88, "ctr": 3.36, "imp": 5151, "thruRate": 7.5, "active": false, "nAds": 2, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "요투", "spend": 257223, "buy": 12, "roas": 146, "ctr": 2.88, "imp": 8875, "thruRate": 10.6, "active": false, "nAds": 2, "parent": "요철", "cat": ["CTA", "특정부분"], "point": "CTA 보강 + 요철 강조", "verdict": "기각", "hookRate": 14.0, "thruRate2": 9.5, "holdRate": 2.3, "vidImp": 4193}, {"sojae": "짝남", "spend": 139944, "buy": 5, "roas": 93, "ctr": 1.27, "imp": 5650, "thruRate": 10.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "3분전3분후", "spend": 136955, "buy": 5, "roas": 101, "ctr": 1.7, "imp": 3530, "thruRate": 5.1, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "문씻문씻", "spend": 135191, "buy": 5, "roas": 119, "ctr": 1.27, "imp": 6797, "thruRate": 7.2, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "약국품절", "spend": 113427, "buy": 4, "roas": 99, "ctr": 1.39, "imp": 3313, "thruRate": 10.7, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "소개", "spend": 111459, "buy": 3, "roas": 86, "ctr": 1.51, "imp": 5970, "thruRate": 8.7, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 12.0, "thruRate2": 10.1, "holdRate": 4.5, "vidImp": 5580}, {"sojae": "대박", "spend": 105772, "buy": 1, "roas": 24, "ctr": 1.91, "imp": 3558, "thruRate": 12.5, "active": true, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 15.0, "thruRate2": 12.7, "holdRate": 3.7, "vidImp": 1261}, {"sojae": "기사", "spend": 104167, "buy": 1, "roas": 22, "ctr": 1.2, "imp": 8245, "thruRate": 10.4, "active": false, "nAds": 1, "parent": "기삼", "cat": ["타겟", "특정부분"], "point": "남성 소스 교체 + 전문가 대본 삭제", "verdict": "기각", "hookRate": 22.9, "thruRate2": 10.1, "holdRate": 6.6, "vidImp": 6295}, {"sojae": "야추", "spend": 100025, "buy": 4, "roas": 96, "ctr": 1.11, "imp": 7661, "thruRate": 9.8, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "낑순", "spend": 98198, "buy": 3, "roas": 82, "ctr": 1.9, "imp": 2585, "thruRate": 7.1, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "세계", "spend": 95636, "buy": 2, "roas": 61, "ctr": 1.88, "imp": 3137, "thruRate": 5.4, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "기투", "spend": 94694, "buy": 2, "roas": 55, "ctr": 1.6, "imp": 4382, "thruRate": 10.7, "active": false, "nAds": 1, "parent": "기생", "cat": ["특정부분"], "point": "모낭충 USP 추가 설명", "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "화장빡침", "spend": 91245, "buy": 2, "roas": 62, "ctr": 1.79, "imp": 1840, "thruRate": 14.3, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": null, "thruRate2": null, "holdRate": null, "vidImp": null}, {"sojae": "여드름", "spend": 89073, "buy": 3, "roas": 104, "ctr": 1.81, "imp": 2370, "thruRate": 16.6, "active": false, "nAds": 1, "parent": null, "cat": [], "point": null, "verdict": "기각", "hookRate": 31.3, "thruRate2": 21.1, "holdRate": 10.5, "vidImp": 1594}], "hmAge": [{"seg": "18-24", "roas": 119, "spend": 2316697, "buy": 96, "cpm": 10687, "ctr": 1.16, "imp": 216781, "share": 9}, {"seg": "25-34", "roas": 143, "spend": 6449072, "buy": 303, "cpm": 17396, "ctr": 1.7, "imp": 370722, "share": 24}, {"seg": "35-44", "roas": 156, "spend": 9874423, "buy": 490, "cpm": 36530, "ctr": 3.33, "imp": 270309, "share": 37}, {"seg": "45-54", "roas": 151, "spend": 6651894, "buy": 316, "cpm": 51104, "ctr": 4.25, "imp": 130164, "share": 25}, {"seg": "55-64", "roas": 120, "spend": 1295067, "buy": 49, "cpm": 59672, "ctr": 4.89, "imp": 21703, "share": 5}, {"seg": "65+", "roas": 127, "spend": 152035, "buy": 6, "cpm": 36759, "ctr": 3.14, "imp": 4136, "share": 1}], "hmGender": [{"seg": "여성", "roas": 149, "spend": 18027862, "buy": 859, "cpm": 38197, "ctr": 3.44, "imp": 471972, "share": 68}, {"seg": "남성", "roas": 143, "spend": 8609857, "buy": 398, "cpm": 16000, "ctr": 1.53, "imp": 538125, "share": 32}], "recent4": {"세안습관2": [{"d": "6/28", "roas": 152, "buy": 9, "ctr": 3.74}, {"d": "6/29", "roas": 81, "buy": 5, "ctr": 3.64}, {"d": "6/30", "roas": 166, "buy": 18, "ctr": 3.73}, {"d": "7/1", "roas": 151, "buy": 5, "ctr": 4.83}]}, "asof": {"max": "5/27~7/3", "kpi": "7/1", "heatmap": "6/27~7/3(7일)", "series": "6/25~7/1"}};
+const BEP=160, TARGET=180;
+const D=V5;
+function fmt(n){return n==null?'—':(n>=10000?(n/10000).toFixed(0)+'만':n.toLocaleString());}
+function verdictInfo(v){return {'테스트중':['⏳ 테스트중','v-test','j-test'],'배리가능':['🟡 배리가능','v-beri','j-beri'],'잠재력':['🔷 잠재력','v-pot','j-pot'],'기각':['🔴 기각','v-rej','j-rej']}[v]||['—','v-test','j-test'];}
+const CATS=['후킹','CTA','타겟','플로우','특정부분'];
+const CATCOLOR={'후킹':'var(--cat-hook)','CTA':'var(--cat-cta)','타겟':'var(--cat-target)','플로우':'var(--cat-flow)','특정부분':'var(--cat-part)'};
+
+const kpi={spend:2372526,roas:154,buy:111,ctr:2.06,cpm:26881};
+document.getElementById('kpibar').innerHTML=`
+  <div class="kpi"><span class="kv">${fmt(kpi.spend)}</span><span class="kk">지출</span></div>
+  <div class="kpi"><span class="kv" style="color:${kpi.roas>=BEP?'var(--green)':'var(--red)'}">${kpi.roas}%</span><span class="kk">ROAS</span></div>
+  <div class="kpi"><span class="kv">${kpi.buy}</span><span class="kk">구매</span></div>
+  <div class="kpi"><span class="kv">${kpi.ctr}%</span><span class="kk">CTR</span></div>
+  <div class="kpi"><span class="kv" style="color:var(--ink3)">₩${kpi.cpm.toLocaleString()}</span><span class="kk">CPM</span></div>`;
+
+const SIG={
+  high:[{name:'세안습관2',gen:'세안습관→세안습관2',roas:210,series:'세안습관2'},{name:'두꺼비턱(CPA)',gen:'신규',roas:265,series:'두꺼비턱'},{name:'남자화잘먹',gen:'신규',roas:208,series:null}],
+  rising:[{name:'세안습관2',gen:'세안습관→세안습관2',firstSeen:'6/26',roas:210,cumSpend:1112866,cumBuy:60,series:'세안습관2'}],
+  beri:[{name:'페네트레7번',gen:'신규',roas:153,buy:23,spend:490962,point:'혜택 정리+여름 소구'},{name:'아니아니',gen:'아니→아니아니',roas:144,buy:13,spend:324399,point:'후킹 배리'}],
+  stop:[{name:'문삼_의중',roas:219,buy:15,spend:219482,ctr:1.01,reason:'ROAS 219%로 좋았으나 PAUSED — CTR 1.01% 낮아 수동 중단 추정(닝닝 확인 필요)'},{name:'메컵_체리',roas:171,buy:6,spend:113034,ctr:2.95,reason:'ROAS 171% 양호했으나 PAUSED — 사유 확인 필요'},{name:'세안습관_리엔',roas:123,buy:3,spend:79223,ctr:1.87,reason:'ROAS 1.23 기준 하회'}]
+};
+const SERIES={
+ '두꺼비턱':[{d:'6/25',roas:240},{d:'6/26',roas:159},{d:'6/27',roas:207},{d:'6/28',roas:188},{d:'6/29',roas:148},{d:'6/30',roas:137},{d:'7/1',roas:164}],
+ '골룸':[{d:'6/25',roas:191},{d:'6/26',roas:215},{d:'6/27',roas:170},{d:'6/28',roas:165},{d:'6/29',roas:135},{d:'6/30',roas:157},{d:'7/1',roas:165}],
+ '세안습관2':[{d:'6/26',roas:193},{d:'6/27',roas:280},{d:'6/28',roas:152},{d:'6/29',roas:81},{d:'6/30',roas:166},{d:'7/1',roas:151}],
+};
+const sig=document.getElementById('signals');
+function sRow(d,cls,val,idx,type){return `<div class="srow sig-click" data-type="${type}" data-idx="${idx}"><span class="sname">${d.name} <span class="gen">${d.gen||''}</span></span><span class="sval ${cls}">${val} ›</span></div>`;}
+sig.innerHTML=`
+  <div class="scard green"><div class="stip"></div><h3>🟢 고효율</h3><div class="desc">어제 ROAS ≥ 160% · 클릭 시 7일 추이</div>${SIG.high.map((d,i)=>sRow(d,'up',d.roas+'%',i,'high')).join('')}</div>
+  <div class="scard blue"><div class="stip"></div><h3>📈 떠오름</h3><div class="desc">최근 게시 · 돌파 중 · 클릭 시 상세</div>${SIG.rising.map((d,i)=>sRow(d,'up',d.roas+'%',i,'rising')).join('')}</div>
+  <div class="scard amber"><div class="stip"></div><h3>💰 배리후보</h3><div class="desc">전환 나오나 ROAS 기준 밑 · 클릭 시 방향</div>${SIG.beri.map((d,i)=>sRow(d,'mid',d.buy+'건·'+d.roas+'%',i,'beri')).join('')}</div>
+  <div class="scard red"><div class="stip"></div><h3>🔴 24h 내 중단</h3><div class="desc">어제→오늘 꺼진 소재 · 클릭 시 사유</div>${SIG.stop.map((d,i)=>sRow(d,'dn',d.roas+'%',i,'stop')).join('')}</div>`;
+
+const testing=document.getElementById('testing');
+const testCards=D.sojae.filter(d=>d.verdict==='테스트중' || (d.active && d.parent));
+testCards.sort((a,b)=>{const o={'테스트중':0,'배리가능':1,'잠재력':2,'기각':3};return (o[a.verdict]-o[b.verdict])||(b.spend-a.spend);});
+if(testCards.length){
+  testing.innerHTML=testCards.map(d=>{
+    const [vt,vc]=verdictInfo(d.verdict);
+    const cats=(d.cat||[]).map(c=>`<span class="catchip cat-${c}">${c}</span>`).join('');
+    return `<div class="test-card sojae-click" data-name="${d.sojae}">
+      <div class="test-top"><div class="test-name">${d.sojae}${d.parent?`<span class="p">← ${d.parent}</span>`:''}</div><span class="vbadge ${vc}">${vt}</span></div>
+      <div class="test-metrics">
+        <div class="tm"><span class="tk">ROAS</span><span class="tv" style="color:${d.roas>=BEP?'var(--green)':'var(--red)'}">${d.roas}%</span></div>
+        <div class="tm"><span class="tk">구매</span><span class="tv">${d.buy}</span></div>
+        <div class="tm"><span class="tk">누적지출</span><span class="tv">${fmt(d.spend)}</span></div>
+        <div class="tm"><span class="tk">상태</span><span class="tv">${d.active?'<span style="color:var(--green)">●</span>':'<span style="color:var(--ink3)">○</span>'}</span></div>
+      </div>${cats?`<div class="catchips">${cats}</div>`:''}</div>`;
+  }).join('');
+} else testing.innerHTML='<div class="empty">4.5만 미만 테스트중 소재 없음 (상위 소재 대부분 학습 완료)</div>';
+
+const boards=[
+  {key:'hookRate',label:'후킹률',unit:'%',icon:'🎣',desc:'노출 중 25%까지 본 % (도입부)',color:'var(--blue)'},
+  {key:'thruRate2',label:'지속률(ThruPlay)',unit:'%',icon:'⏱️',desc:'노출 중 ThruPlay 완료 %',color:'var(--purple)'},
+  {key:'holdRate',label:'중반잔존',unit:'%',icon:'📉',desc:'노출 중 75%까지 본 %',color:'var(--amber)'},
+  {key:'roas',label:'ROAS',unit:'%',icon:'💵',desc:'매출 전환력 (참고)',color:'var(--gold)'},
+];
+const ld=document.getElementById('leaders');
+boards.forEach(b=>{
+  const top=D.sojae.filter(d=>d[b.key]!=null&&(b.key==='roas'?d.spend>50000:d.vidImp>1000)).sort((x,y)=>y[b.key]-x[b.key]).slice(0,5);
+  const max=top.length?top[0][b.key]:1;
+  ld.innerHTML+=`<div class="lbcard"><div class="lbhead"><span class="lbicon">${b.icon}</span><div><div class="lbtitle">${b.label}</div><div class="lbdesc">${b.desc}</div></div></div>
+    <div class="lblist">${top.map((d,i)=>`<div class="lbrow sojae-click" data-name="${d.sojae}"><span class="lbrank">${i+1}</span><span class="lbname">${d.sojae}</span><div class="lbbar"><div class="lbfill" style="width:${Math.round(d[b.key]/max*100)}%;background:${b.color}"></div></div><span class="lbval">${d[b.key]}${b.unit}</span></div>`).join('')}</div></div>`;
+});
+
+const names=new Set(D.sojae.map(d=>d.sojae));
+const bySojae={}; D.sojae.forEach(d=>bySojae[d.sojae]=d);
+const childByParent={};
+D.sojae.forEach(d=>{if(d.parent){(childByParent[d.parent]=childByParent[d.parent]||[]).push(d);}});
+const realRoots=D.sojae.filter(d=>!d.parent&&childByParent[d.sojae]);
+const virtualRoots=[...new Set(D.sojae.filter(d=>d.parent&&!names.has(d.parent)).map(d=>d.parent))];
+const lin=document.getElementById('lineage');
+function famOf(root){const fam=[];let fr=[root];while(fr.length){const nx=[];D.sojae.forEach(d=>{if(fr.includes(d.parent)){fam.push(d);nx.push(d.sojae);}});fr=nx;}return fam;}
+function metricHTML(d){return `<div class="lmetrics">
+  <div class="lm"><span class="lk">ROAS</span><span class="lv">${d.roas}%</span></div>
+  <div class="lm"><span class="lk">후킹률</span><span class="lv">${d.hookRate!=null?d.hookRate+'%':'—'}</span></div>
+  <div class="lm"><span class="lk">지속률</span><span class="lv">${d.thruRate2!=null?d.thruRate2+'%':'—'}</span></div>
+  <div class="lm"><span class="lk">구매</span><span class="lv">${d.buy}</span></div></div>`;}
+function variBar(cats){return `<div class="varibar">${CATS.map(c=>{const on=(cats||[]).includes(c);return `<div class="vari-ax ${on?'on':''}" style="--c:${CATCOLOR[c]}"><div class="vlabel">${c}</div><div class="vdot"></div></div>`;}).join('')}</div>`;}
+function renderChild(c,champ){
+  const [jt,,jc]=verdictInfo(c.verdict);
+  return `<div class="child sojae-click" data-name="${c.sojae}">
+    <div class="child-top"><span class="lname">${c.sojae===champ?'<span class="crown">👑</span>':''}${c.sojae}</span>${metricHTML(c)}<span class="judge ${jc}">${jt}</span></div>
+    ${variBar(c.cat)}
+    ${c.point?`<div class="pointbox"><span class="plabel">🔧 배리포인트</span>${c.point}</div>`:''}</div>`;
+}
+let linCnt=0;
+function renderLineage(rootName,rootObj){
+  const fam=famOf(rootName); const scored=fam.filter(x=>x.spend);
+  const champ=scored.length?scored.reduce((a,b)=>b.roas>a.roas?b:a).sojae:null;
+  linCnt++;
+  const rEl=document.createElement('div');rEl.className='lrow root';
+  if(rootObj){const [jt,,jc]=verdictInfo(rootObj.verdict);
+    rEl.innerHTML=`<span class="ltoggle">▶</span><span class="lname">${rootObj.sojae===champ?'<span class="crown">👑</span>':''}${rootName} <span class="lgen">${fam.length} 배리</span></span>${metricHTML(rootObj)}<span class="judge ${jc}">${jt}</span>`;
+  } else {
+    rEl.innerHTML=`<span class="ltoggle">▶</span><span class="lname">${rootName} <span class="lgen">${fam.length} 배리 · 원본 데이터없음</span></span><div class="lmetrics"><div class="lm"><span class="lv" style="color:var(--ink3)">루트</span></div></div><span class="judge j-test">—</span>`;
+  }
+  const kids=document.createElement('div');kids.className='children';
+  fam.forEach(c=>{kids.innerHTML+=renderChild(c,champ);});
+  rEl.onclick=(e)=>{if(e.target.closest('.sojae-click')&&e.target.closest('.child'))return;rEl.classList.toggle('open');kids.classList.toggle('show');};
+  lin.appendChild(rEl);lin.appendChild(kids);
+}
+realRoots.forEach(r=>renderLineage(r.sojae,r));
+virtualRoots.forEach(rn=>renderLineage(rn,null));
+document.getElementById('lincount').textContent=linCnt+'개 계보';
+
+let sortKey='spend',sortDir=-1;
+const tbody=document.getElementById('tbody');
+function renderTable(){
+  const rows=[...D.sojae].sort((a,b)=>{let x=a[sortKey],y=b[sortKey];if(x==null)x=-1;if(y==null)y=-1;return (typeof x==='number'?x-y:String(x).localeCompare(y))*sortDir;});
+  tbody.innerHTML=rows.map(d=>{
+    const [vt,,vc]=verdictInfo(d.verdict);
+    const rc=d.roas>=TARGET?'var(--green)':(d.roas>=BEP?'var(--amber)':'var(--red)');
+    return `<tr class="sojae-click" data-name="${d.sojae}"><td><b>${d.sojae}</b></td>
+      <td style="color:var(--ink3);font-size:10px">${d.parent||'—'}</td>
+      <td><b style="color:${rc}">${d.roas}%</b></td><td>${d.hookRate!=null?d.hookRate+'%':'—'}</td><td>${d.thruRate2!=null?d.thruRate2+'%':'—'}</td><td>${d.ctr}%</td>
+      <td>${d.buy}</td><td>${fmt(d.spend)}</td>
+      <td><span class="judge ${vc}">${vt}</span></td>
+      <td>${d.active?'<span style="color:var(--green)">● 게시</span>':'<span style="color:var(--ink3)">○ 꺼짐</span>'}</td></tr>`;
+  }).join('');
+  document.getElementById('rowcount').textContent=rows.length+'개';
+}
+document.querySelectorAll('thead th').forEach(th=>th.onclick=()=>{const k=th.dataset.s;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}renderTable();});
+renderTable();
+
+function roasColor(r){if(r<BEP){const t=Math.max(0,(BEP-r)/50);return `rgba(224,89,77,${0.22+t*0.5})`;}const t=Math.min(1,(r-BEP)/50);return `rgba(63,184,127,${0.18+t*0.6})`;}
+function hmCell(d,avg){
+  let flag='';
+  if(d.roas>=avg&&d.share<15&&d.buy>2)flag='<span class="hm-flag flag-under">▲ 저평가</span>';
+  else if(d.roas<avg&&d.share>=25)flag='<span class="hm-flag flag-over">▼ 과투자</span>';
+  return `<div class="hm-cell" style="background:${roasColor(d.roas)}">${flag}<div class="hm-seg">${d.seg}</div><div class="hm-roas">${d.roas}%</div><div class="hm-sub">지출 ${d.share}% · ${fmt(d.spend)}<br>CPM ${d.cpm.toLocaleString()} · 구매 ${d.buy}</div></div>`;
+}
+const avgA=Math.round(D.hmAge.reduce((s,d)=>s+d.roas*d.spend,0)/D.hmAge.reduce((s,d)=>s+d.spend,0));
+const avgG=Math.round(D.hmGender.reduce((s,d)=>s+d.roas*d.spend,0)/D.hmGender.reduce((s,d)=>s+d.spend,0));
+document.getElementById('heatmap').innerHTML=`<div class="hm-wrap">
+  <div class="hm-block"><div class="hm-title">📅 연령대별<span class="axis">가중평균 ROAS ${avgA}% · 기준 ${BEP}%</span></div><div class="hm-grid hm-age">${D.hmAge.map(d=>hmCell(d,avgA)).join('')}</div></div>
+  <div class="hm-block"><div class="hm-title">⚧ 성별<span class="axis">가중평균 ROAS ${avgG}%</span></div><div class="hm-grid hm-gender">${D.hmGender.map(d=>hmCell(d,avgG)).join('')}</div></div>
+  <div class="hm-insight"><b>💡 진단</b> 최근 7일 효율 1위는 <b>35-44(156%)</b>·45-54(151%). 18-24는 CPM 최저(₩10,687)라 노출 많지만 ROAS 119%로 최하위 — 예산 누수. 여성(149%)이 남성(143%)보다 우위. <b>35-54 여성 집중</b> 권장.</div>
+</div>`;
+
+function openModal(html){let m=document.getElementById('nnModal');if(!m){m=document.createElement('div');m.id='nnModal';m.className='modal-bg';document.body.appendChild(m);}
+  m.innerHTML=`<div class="modal-box">${html}<div class="modal-x" onclick="document.getElementById('nnModal').classList.remove('on')">✕</div></div>`;
+  m.classList.add('on');m.onclick=(e)=>{if(e.target===m)m.classList.remove('on');};}
+function sparkline(days,w,h){
+  const vals=days.map(d=>d.roas);const max=Math.max(...vals,TARGET)*1.1,min=Math.min(...vals,0)*0.9;const rng=max-min||1;
+  const step=w/(days.length-1);const pts=days.map((d,i)=>[i*step,h-((d.roas-min)/rng)*h]);
+  const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const bepY=h-((BEP-min)/rng)*h, tgtY=h-((TARGET-min)/rng)*h;
+  const dots=pts.map((p,i)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="${days[i].roas>=BEP?'var(--green)':'var(--red)'}"/><text x="${p[0].toFixed(1)}" y="${(p[1]-9).toFixed(1)}" font-size="10" fill="var(--ink2)" text-anchor="middle">${days[i].roas}</text><text x="${p[0].toFixed(1)}" y="${h+15}" font-size="9" fill="var(--ink3)" text-anchor="middle">${days[i].d}</text>`).join('');
+  return `<svg viewBox="0 -20 ${w} ${h+40}" style="width:100%;height:auto">
+    <line x1="0" y1="${bepY.toFixed(1)}" x2="${w}" y2="${bepY.toFixed(1)}" stroke="var(--amber)" stroke-dasharray="4 3" stroke-width="1"/><text x="${w-2}" y="${(bepY-4).toFixed(1)}" font-size="8.5" fill="var(--amber)" text-anchor="end">기준 ${BEP}%</text>
+    <line x1="0" y1="${tgtY.toFixed(1)}" x2="${w}" y2="${tgtY.toFixed(1)}" stroke="var(--green)" stroke-dasharray="4 3" stroke-width="1"/><text x="${w-2}" y="${(tgtY-4).toFixed(1)}" font-size="8.5" fill="var(--green)" text-anchor="end">목표 ${TARGET}%</text>
+    <path d="${path}" fill="none" stroke="var(--blue)" stroke-width="2"/>${dots}</svg>`;
+}
+function sojaeModal(name){
+  const d=bySojae[name]; if(!d)return;
+  const [vt]=verdictInfo(d.verdict);
+  let chain=[d],cur=d;
+  while(cur&&cur.parent){const p=bySojae[cur.parent];if(p){chain.unshift(p);cur=p;}else{chain.unshift({sojae:cur.parent,virtual:true});break;}}
+  const chainHTML=chain.map((c,i)=>`${i?'<span class="m-lin-arrow">→</span>':''}<span style="font-weight:${c.sojae===name?700:400};color:${c.sojae===name?'var(--ink)':'var(--ink3)'}">${c.sojae}${c.roas?` <span style="font-size:9px">${c.roas}%</span>`:''}</span>`).join(' ');
+  const r4=D.recent4[name];
+  const catsHTML=(d.cat&&d.cat.length)?variBar(d.cat):'';
+  openModal(`<div class="m-head">${name} <span class="m-sub">${d.parent?d.parent+'→'+name:'신규'}</span></div>
+    <div class="m-asof">📅 전체기간 누적 · 판정 ${vt}</div>
+    <div class="m-lineage"><div style="font-size:10px;color:var(--ink3);margin-bottom:8px">🌳 계보</div><div class="m-lin-row">${chainHTML}</div>${catsHTML}${d.point?`<div class="pointbox" style="margin-top:10px"><span class="plabel">🔧 배리포인트</span>${d.point}</div>`:''}</div>
+    <div class="m-stats">
+      <div><span class="mk">ROAS(누적)</span><span class="mv" style="color:${d.roas>=BEP?'var(--green)':'var(--red)'}">${d.roas}%</span></div>
+      <div><span class="mk">후킹률</span><span class="mv">${d.hookRate!=null?d.hookRate+'%':'—'}</span></div>
+      <div><span class="mk">지속률</span><span class="mv">${d.thruRate2!=null?d.thruRate2+'%':'—'}</span></div>
+      <div><span class="mk">구매</span><span class="mv">${d.buy}</span></div>
+    </div>
+    ${r4?`<div style="font-size:11px;color:var(--ink3);margin:8px 0 4px">📅 최근 4일 ROAS</div><div class="m-chart">${sparkline(r4,560,120)}</div>`:'<div class="m-insight"><b>ℹ️</b> 이 소재의 최근 4일 일별 데이터는 아직 미조회 (닝닝이 필요 시 메타에서 조회)</div>'}`);
+}
+document.addEventListener('click',e=>{
+  const sj=e.target.closest('.sojae-click');
+  if(sj){sojaeModal(sj.dataset.name);return;}
+  const row=e.target.closest('.sig-click'); if(!row)return;
+  const type=row.dataset.type,i=+row.dataset.idx;
+  if(type==='high'){const d=SIG.high[i],days=SERIES[d.series];
+    if(!days){openModal(`<div class="m-head">🟢 ${d.name}</div><div class="m-asof">📅 7/2 기준</div><div class="m-stats"><div><span class="mk">7/2 ROAS</span><span class="mv" style="color:var(--green)">${d.roas}%</span></div></div><div class="m-insight"><b>ℹ️</b> 이 소재의 7일 일별 추이는 아직 미조회 (닝닝이 필요 시 조회). 클릭 시 계보는 아래 계보 섹션에서 소재명을 눌러 확인.</div>`);return;}
+    const best=days.reduce((a,b)=>b.roas>a.roas?b:a),worst=days.reduce((a,b)=>b.roas<a.roas?b:a);
+    openModal(`<div class="m-head">🟢 ${d.name}</div><div class="m-asof">📅 최근 7일(6/25~7/1) 일별 ROAS</div>
+      <div class="m-chart">${sparkline(days,560,140)}</div>
+      <div class="m-stats"><div><span class="mk">어제 ROAS</span><span class="mv">${d.roas}%</span></div><div><span class="mk">7일 평균</span><span class="mv">${Math.round(days.reduce((s,x)=>s+x.roas,0)/days.length)}%</span></div><div><span class="mk">정점</span><span class="mv">${best.roas}%(${best.d})</span></div><div><span class="mk">저점</span><span class="mv">${worst.roas}%(${worst.d})</span></div></div>
+      <div class="m-insight"><b>💡</b> 정점 ${best.d}(${best.roas}%) vs 저점 ${worst.d}(${worst.roas}%). 목표 180% 위로 안착하려면 정점일 조건(예산·타겟) 재현이 관건.</div>`);
+  } else if(type==='rising'){const d=SIG.rising[i],days=SERIES[d.series];
+    openModal(`<div class="m-head">📈 ${d.name}</div><div class="m-asof">📅 게시 ${d.firstSeen} ~ 현재</div>
+      ${days?`<div class="m-chart">${sparkline(days,560,140)}</div>`:''}
+      <div class="m-stats"><div><span class="mk">게시 시작</span><span class="mv">${d.firstSeen}</span></div><div><span class="mk">어제 ROAS</span><span class="mv">${d.roas}%</span></div><div><span class="mk">누적 지출</span><span class="mv">${fmt(d.cumSpend)}</span></div><div><span class="mk">누적 구매</span><span class="mv">${d.cumBuy}</span></div></div>
+      <div class="m-insight"><b>💡</b> ${d.firstSeen} 게시 후 누적 ${d.cumBuy}건. 원본 세안습관(누적 162%) 대비 안정적. 예산 증액으로 학습 완성 권장.</div>`);
+  } else if(type==='beri'){const d=SIG.beri[i];
+    openModal(`<div class="m-head">💰 ${d.name}</div><div class="m-asof">📅 전체기간 누적</div>
+      <div class="m-stats"><div><span class="mk">ROAS(누적)</span><span class="mv" style="color:var(--red)">${d.roas}%</span></div><div><span class="mk">구매</span><span class="mv">${d.buy}</span></div><div><span class="mk">누적지출</span><span class="mv">${fmt(d.spend)}</span></div><div><span class="mk">판정</span><span class="mv">🟡</span></div></div>
+      ${d.point?`<div class="pointbox"><span class="plabel">🔧</span>${d.point}</div>`:''}
+      <div class="m-insight"><b>🧭 다음 배리 방향</b> 전환 충분(${d.buy}건)하나 ROAS 미달. ${d.name==='유튭'?'유튜브 톤 유지+<b>말미 CTA 강화</b> → 실제 "유투" 배리가 이 방향.':'후킹 유지+제품 노출/CTA 손보기 권장.'}</div>`);
+  } else if(type==='stop'){const d=SIG.stop[i];
+    openModal(`<div class="m-head">🔴 ${d.name}</div><div class="m-asof">📅 24h 내 중단 · 중단 전 수치</div>
+      <div class="m-stats"><div><span class="mk">ROAS</span><span class="mv" style="color:var(--red)">${d.roas}%</span></div><div><span class="mk">CTR</span><span class="mv">${d.ctr}%</span></div><div><span class="mk">구매</span><span class="mv">${d.buy}</span></div><div><span class="mk">지출</span><span class="mv">${fmt(d.spend)}</span></div></div>
+      <div class="m-insight" style="border-color:var(--red)"><b style="color:var(--red)">⚠️ 사유</b> ${d.reason}</div>`);
+  }
+});
+</script>
+</body>
+</html>
